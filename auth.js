@@ -11,14 +11,14 @@ const SAVED_ID_KEY = 'perpetual_saved_student_id';
 const DEMO_STUDENT_PROFILES = {
   "2023-01492": {
     studentId: "2023-01492",
-    fullName: "Alexander M. Reyes",
-    firstName: "Alexander",
-    email: "a.reyes@perpetual.edu.ph",
+    fullName: "Juan Dela Cruz",
+    firstName: "Juan",
+    email: "j.delacruz@perpetual.edu.ph",
     major: "Information Technology",
     majorShort: "BS IT",
     program: "BS Information Technology",
     yearLevel: "3rd Year (Junior)",
-    initials: "AR",
+    initials: "JD",
     status: "Regular / Dean's Lister",
     completedCredits: "78 / 144 Units",
     gpa: "3.78",
