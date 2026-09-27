@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University of Perpetual Help System Dalta - Finance & Cash-In</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .finance-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+    }
+    
+    /* Transaction Ledger Table */
+    .ledger-container {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .badge-paid {
+      color: var(--success);
+    }
+    
+    .badge-pending {
+      color: var(--warning);
+    }
+    
+    .badge-overdue {
+      color: var(--danger);
+    }
+
+    /* Clean Dedicated Action Buttons */
+    .card-action-buttons-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .action-btn-large {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: var(--text-main);
+      transition: var(--transition-smooth);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .action-btn-large:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(122, 12, 46, 0.1);
+    }
+
+    .action-btn-icon-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .action-btn-cashin .action-btn-icon-wrapper {
+      background: #ECFDF5;
+      color: #059669;
+    }
+
+    .action-btn-large:hover.action-btn-cashin .action-btn-icon-wrapper {
+      background: #059669;
+      color: #FFFFFF;
+    }
+
+    .action-btn-tuition .action-btn-icon-wrapper {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .action-btn-large:hover.action-btn-tuition .action-btn-icon-wrapper {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .action-btn-icon-wrapper svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .action-btn-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .action-btn-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .action-btn-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .action-btn-arrow {
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      transition: var(--transition-smooth);
+    }
+
+    .action-btn-arrow svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .action-btn-large:hover .action-btn-arrow {
+      color: var(--primary);
+      transform: translateX(3px);
+    }
+    
+    /* Form Elements */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+    
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .form-input {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+    
+    .form-input:focus {
+      border-color: var(--primary);
+    }
+    
+    /* Payment Processing Modal styling */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal-backdrop.show {
+      display: flex;
+      opacity: 1;
+    }
+    
+    .modal-box {
+      background-color: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      width: 400px;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid var(--border-color);
+    }
+    
+    .modal-backdrop.show .modal-box {
+      transform: scale(1);
+    }
+    
+    .spinner {
+      border: 3px solid var(--primary-light);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Ledger Row Interactive Hover & Selected States */
+    .ledger-table tbody tr {
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    
+    .ledger-table tbody tr:hover {
+      background-color: #FFF5F7 !important;
+    }
+    
+    .ledger-table tbody tr.selected-ledger-row {
+      background-color: #FFF0F2 !important;
+      outline: 2px solid var(--primary);
+      outline-offset: -2px;
+    }
+
+    .receipt-ref-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      border: 1px solid rgba(122, 12, 46, 0.2);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .receipt-ref-badge:hover {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .receipt-ref-badge svg {
+      width: 11px;
+      height: 11px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* Contextual 'View Receipt' Prompt Box */
+    .receipt-prompt-box {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFF8F9 100%);
+      border: 1px solid rgba(122, 12, 46, 0.25);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(122, 12, 46, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      animation: promptSlideDown 0.25s ease-out;
+    }
+
+    @keyframes promptSlideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .prompt-box-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .prompt-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .prompt-icon-wrap svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .prompt-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .prompt-ref-tag {
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      background: #FFFFFF;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(122, 12, 46, 0.2);
+    }
+
+    .prompt-title-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .prompt-meta-text {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .prompt-box-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .prompt-amount-val {
+      font-family: var(--font-title);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .prompt-view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 7px 14px;
+      cursor: pointer;
+    }
+
+    .prompt-dismiss-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 0.2s;
+    }
+
+    .prompt-dismiss-btn:hover {
+      color: var(--text-main);
+    }
+
+    /* Soft Copy Official Receipt Modal */
+    .receipt-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      overflow-y: auto;
+    }
+
+    .receipt-modal-backdrop.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .receipt-modal-container {
+      width: 100%;
+      max-width: 680px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: modalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalZoomIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .receipt-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.88);
+      color: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+    }
+
+    .receipt-toolbar-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .receipt-toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .receipt-close-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #FFFFFF;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+      transition: background 0.2s;
+    }
+
+    .receipt-close-btn:hover {
+      background: rgba(239, 68, 68, 0.85);
+    }
+
+    /* Authentic Receipt Sheet Paper Styling */
+    .receipt-sheet {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      padding: 32px 36px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+      position: relative;
+      border: 2px solid var(--primary);
+      outline: 1px solid rgba(122, 12, 46, 0.35);
+      outline-offset: -6px;
+      overflow: hidden;
+      color: var(--text-main);
+    }
+
+    .receipt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .receipt-header-text {
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .receipt-header-text h2 {
+      font-family: var(--font-title);
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.25;
+      margin-bottom: 2px;
+    }
+
+    .receipt-sub-addr {
+      font-size: 10px;
+      color: var(--text-medium);
+      line-height: 1.3;
+    }
+
+    .receipt-sub-dept {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .receipt-title-badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 3px 12px;
+      background: var(--primary);
+      color: #FFFFFF;
+      font-family: var(--font-title);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 4px;
+    }
+
+    .receipt-header-serial {
+      flex-shrink: 0;
+      text-align: right;
+      border: 1px solid rgba(122, 12, 46, 0.2);
+      background: #FFF9FA;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .serial-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .serial-number {
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 1px 0;
+    }
+
+    .serial-date {
+      font-size: 10px;
+      color: var(--text-medium);
+      font-weight: 600;
+    }
+
+    .serial-term-tag {
+      font-size: 9px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .receipt-divider {
+      height: 1px;
+      background: repeating-linear-gradient(to right, var(--primary) 0, var(--primary) 6px, transparent 6px, transparent 10px);
+      margin: 16px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .receipt-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px 20px;
+      background: #FAFAFA;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 16px;
+    }
+
+    .rcpt-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .rcpt-meta-label {
+      font-size: 9.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .rcpt-meta-val {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .rcpt-meta-val.monospace {
+      font-family: monospace;
+    }
+
+    .rcpt-meta-val.status-cleared {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .receipt-items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
+      font-size: 11.5px;
+    }
+
+    .receipt-items-table th {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-family: var(--font-title);
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 10px;
+      border-top: 1px solid rgba(122, 12, 46, 0.2);
+      border-bottom: 1px solid rgba(122, 12, 46, 0.2);
+      text-align: left;
+    }
+
+    .receipt-items-table td {
+      padding: 10px 10px;
+      border-bottom: 1px solid #E2E8F0;
+      color: var(--text-main);
+    }
+
+    .receipt-items-table tfoot td {
+      padding: 10px 10px;
+      border-top: 2px solid var(--primary);
+      border-bottom: none;
+      background: #FAFAFA;
+    }
+
+    .receipt-amount-words-box {
+      border: 1px solid var(--border-color);
+      background: #FFFDFD;
+      border-left: 3px solid var(--primary);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      display: flex;
+      gap: 6px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .amount-words-label {
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .amount-words-text {
+      color: var(--primary);
+      font-weight: 700;
+      font-style: italic;
+    }
+
+    .receipt-footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1.2fr;
+      gap: 16px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      padding-top: 8px;
+      border-top: 1px dashed #CBD5E1;
+    }
+
+    .receipt-verification-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .barcode-svg {
+      width: 160px;
+      height: 28px;
+    }
+
+    .verification-hash-text {
+      font-family: monospace;
+      font-size: 9px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .verification-qr-caption {
+      font-size: 8.5px;
+      color: var(--text-muted);
+    }
+
+    .receipt-stamp-col {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .official-stamp-svg {
+      width: 95px;
+      height: 95px;
+      transform: rotate(-7deg);
+      filter: drop-shadow(0 2px 4px rgba(5, 150, 105, 0.15));
+    }
+
+    .receipt-signature-col {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .signature-svg {
+      width: 120px;
+      height: 38px;
+      margin-bottom: 2px;
+    }
+
+    .signatory-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      border-top: 1px solid var(--text-main);
+      padding-top: 2px;
+      width: 150px;
+      text-align: center;
+    }
+
+    .signatory-title {
+      font-size: 9px;
+      color: var(--text-muted);
+      width: 150px;
+      text-align: center;
+    }
+
+    .signatory-dept {
+      font-size: 8px;
+      color: var(--text-muted);
+      font-family: monospace;
+      width: 150px;
+      text-align: center;
+    }
+
+    .receipt-legal-note {
+      font-size: 8.5px;
+      color: var(--text-muted);
+      line-height: 1.35;
+      text-align: center;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid #F1F5F9;
+      position: relative;
+      z-index: 2;
+    }
+
+    @media print {
+      body.printing-receipt .app-container,
+      body.printing-receipt .sidebar,
+      body.printing-receipt .workspace-header,
+      body.printing-receipt .finance-grid,
+      body.printing-receipt #checkout-modal,
+      body.printing-receipt .receipt-toolbar {
+        display: none !important;
+      }
+      body.printing-receipt #official-receipt-modal {
+        position: static !important;
+        display: block !important;
+        background: transparent !important;
+        padding: 0 !important;
+        opacity: 1 !important;
+      }
+      body.printing-receipt .receipt-modal-container {
+        max-width: 100% !important;
+        transform: none !important;
+      }
+      body.printing-receipt .receipt-sheet {
+        box-shadow: none !important;
+        border: 2px solid #7A0C2E !important;
+        outline: none !important;
+        width: 100% !important;
+        margin: 0 !important;
+        page-break-inside: avoid !important;
+      }
+
+      body:not(.printing-receipt) .sidebar, 
+      body:not(.printing-receipt) .workspace-header, 
+      body:not(.printing-receipt) .tuition-card-perspective, 
+      body:not(.printing-receipt) .action-type-toggle, 
+      body:not(.printing-receipt) #cashin-form, 
+      body:not(.printing-receipt) #tuition-form, 
+      body:not(.printing-receipt) .btn, 
+      body:not(.printing-receipt) .date-badge, 
+      body:not(.printing-receipt) .header-actions,
+      body:not(.printing-receipt) .receipt-prompt-box,
+      body:not(.printing-receipt) #checkout-modal,
+      body:not(.printing-receipt) #official-receipt-modal {
+        display: none !important;
+      }
+      body:not(.printing-receipt), 
+      body:not(.printing-receipt) .app-container, 
+      body:not(.printing-receipt) .main-workspace {
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: #FFFFFF !important;
+      }
+      body:not(.printing-receipt) .finance-grid {
+        display: block !important;
+      }
+      body:not(.printing-receipt) .col-7 {
+        width: 100% !important;
+        box-shadow: none !important;
+        border: 1px solid #CBD5E1 !important;
+      }
+      body:not(.printing-receipt) .ledger-table-container {
+        max-height: none !important;
+        overflow: visible !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- --- Left Sidebar Navigation --- -->
+    <aside class="sidebar">
+      <div class="logo-section">
+        <span class="logo-text">University of Perpetual Help System Dalta</span>
+      </div>
+
+      <nav class="nav-menu">
+        <li class="nav-item">
+          <a href="index.html">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="academics.html">
+            <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Academics Hub
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="finance.html">
+            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            Finance & Tuition
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="settings.html">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            Portal Settings
+          </a>
+        </li>
+      </nav>
+
+      <div class="user-profile-summary">
+        <div class="user-profile-row">
+          <svg class="profile-avatar" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="48" fill="url(#avatarGrad)" />
+            <text class="user-avatar-initials" x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="700" font-size="36" fill="#7A0C2E">KC</text>
+          </svg>
+          <div class="profile-info">
+            <span class="profile-name">Kelvin Charles Cancio</span>
+            <span class="profile-role">3rd Year • BS CS</span>
+          </div>
+        </div>
+        <button class="btn-sidebar-logout" id="logout-btn" title="Sign out of student portal">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- --- Main Workspace Area --- -->
+    <main class="main-workspace">
+      
+      <!-- --- Header --- -->
+      <header class="workspace-header">
+        <div class="welcome-msg">
+          <h1>Finance & Cash-In Portal</h1>
+          <p>Top up your student balance card via GCash, Maya, or Bank Transfers, and settle tuition invoices.</p>
+        </div>
+        <div class="header-actions">
+          <div class="date-badge">
+            <span id="header-date-text">Wednesday, Jul 29, 2026</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- --- Finance Grid System --- -->
+      <div class="finance-grid">
+        
+        <!-- Student Account Card & Cash-In Form (Col 5) -->
+        <section class="portal-card col-5" style="display: flex; flex-direction: column;">
+          <div class="card-header-row">
+            <h3 class="card-title-main">Perpetual Dalta Card</h3>
+            <span class="result-label" style="font-size:10px; color:var(--text-muted);">Tap Card to Flip</span>
+          </div>
+
+          <div class="tuition-card-perspective">
+            <div class="tuition-card-inner" id="tuition-card-flip">
+              
+              <!-- Front Side -->
+              <div class="tuition-card-front">
+                <div class="t-card-header">
+                  <span class="t-card-brand">PERPETUAL DALTA CARD</span>
+                </div>
+                <div class="t-card-body" id="card-balance-display">
+                  ₱14,850.00
+                </div>
+                <div class="t-card-footer">
+                  <div>
+                    <div style="font-size: 8px; opacity: 0.6; text-transform: uppercase;">Student Account</div>
+                    <div id="finance-card-student">Kelvin Charles Cancio (2023-01492)</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-size: 8px; opacity: 0.6; text-transform: uppercase;">Status</div>
+                    <div>Active / Verified</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Back Side -->
+              <div class="tuition-card-back">
+                <div class="back-details">
+                  <div class="back-detail-row">
+                    <span class="back-detail-title">Term Tuition Invoice</span>
+                    <span class="back-detail-val">₱18,500.00</span>
+                  </div>
+                  <div class="back-detail-row">
+                    <span class="back-detail-title">Campus Activity Fee</span>
+                    <span class="back-detail-val">₱2,500.00</span>
+                  </div>
+                  <div class="back-detail-row">
+                    <span class="back-detail-title">Technology Levy</span>
+                    <span class="back-detail-val">₱3,500.00</span>
+                  </div>
+                </div>
+                <div class="pay-btn-mini">Flipped Details</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Clean Dedicated Action Buttons -->
+          <div class="card-action-buttons-group">
+            <a href="cashin.html" class="action-btn-large action-btn-cashin">
+              <div class="action-btn-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              </div>
+              <div class="action-btn-content">
+                <span class="action-btn-label">Cash-In / Top Up</span>
+                <span class="action-btn-desc">Add balance via GCash, Maya, or Bank Transfer</span>
+              </div>
+              <div class="action-btn-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+            </a>
+
+            <a href="pay-tuition.html" class="action-btn-large action-btn-tuition">
+              <div class="action-btn-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+              </div>
+              <div class="action-btn-content">
+                <span class="action-btn-label">Pay Tuition Fee</span>
+                <span class="action-btn-desc">Settle term assessments, prelims, & exam permits</span>
+              </div>
+              <div class="action-btn-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+            </a>
+          </div>
+
+        </section>
+
+        <!-- Statement of Account & Student Ledger (Col 7) -->
+        <section class="portal-card col-7" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="card-header-row" style="align-items: flex-start; margin-bottom: 14px;">
+              <div>
+                <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.7px; text-transform: uppercase; color: var(--primary);">University of Perpetual Help System DALTA</div>
+                <h3 class="card-title-main" style="margin-top: 2px;">Statement of Account & Student Ledger</h3>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Treasury & Accounting Division • 1st Semester, A.Y. 2026–2027</div>
+              </div>
+              <button class="btn btn-secondary" onclick="window.print()" style="padding: 6px 12px; font-size: 11px; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Print SOA
+              </button>
+            </div>
+
+            <!-- Student Ledger Institutional Header Strip -->
+            <div style="background-color: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 14px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; font-size: 11px;">
+              <div>
+                <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 600;">Student No.</div>
+                <div style="font-weight: 700; color: var(--text-main); font-family: monospace;" id="finance-ledger-student-id">2023-01492</div>
+              </div>
+              <div>
+                <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 600;">Student Name</div>
+                <div style="font-weight: 700; color: var(--text-main);" id="finance-ledger-student-name">Kelvin Charles Cancio</div>
+              </div>
+              <div>
+                <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 600;">Degree Program</div>
+                <div style="font-weight: 700; color: var(--text-main);">BS Computer Science</div>
+              </div>
+              <div>
+                <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 600;">Accounting Status</div>
+                <div style="font-weight: 700; color: var(--success);">AUDIT VERIFIED</div>
+              </div>
+            </div>
+
+            <!-- Contextual 'View Receipt' Prompt Box (Shows when clicking a ledger row) -->
+            <div class="receipt-prompt-box" id="receipt-prompt-box" style="display: none;">
+              <div class="prompt-box-left">
+                <div class="prompt-icon-wrap">
+                  <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <div>
+                  <div class="prompt-title-row">
+                    <span class="prompt-ref-tag" id="prompt-ref-tag">OR-BDO-33109</span>
+                    <strong class="prompt-title-text" id="prompt-title-text">Downpayment (BDO Transfer)</strong>
+                  </div>
+                  <div class="prompt-meta-text" id="prompt-meta-text">August 05, 2026 • Verified Treasury Record</div>
+                </div>
+              </div>
+              <div class="prompt-box-right">
+                <div class="prompt-amount-val" id="prompt-amount-val">₱4,650.00</div>
+                <button class="btn btn-primary prompt-view-btn" id="btn-open-prompt-receipt">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <span>View Official Receipt</span>
+                </button>
+                <button class="prompt-dismiss-btn" id="btn-dismiss-prompt" title="Close box">&times;</button>
+              </div>
+            </div>
+
+            <!-- Authentic University Ledger Table -->
+            <div class="ledger-table-container" style="max-height: 340px; overflow-y: auto;">
+              <table class="ledger-table" id="transaction-table">
+                <thead>
+                  <tr>
+                    <th style="width: 14%;">Date</th>
+                    <th style="width: 18%;">Ref / OR No.</th>
+                    <th style="width: 28%;">Particulars</th>
+                    <th style="width: 13%; text-align: right;">Debit</th>
+                    <th style="width: 13%; text-align: right;">Credit</th>
+                    <th style="width: 14%; text-align: right;">Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="ledger-body">
+                  <tr style="background-color: #FAFAFA;" data-ref="ASSMT-26-01" title="Click to view assessment invoice">
+                    <td>Aug 01, 2026</td>
+                    <td><span class="receipt-ref-badge" data-ref="ASSMT-26-01">ASSMT-26-01 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span></td>
+                    <td>Tuition Fee (18.0 Units)</td>
+                    <td style="text-align: right; font-weight: 600; color: var(--text-main);">₱18,500.00</td>
+                    <td style="text-align: right; color: var(--text-muted);">—</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--text-main);">₱18,500.00</td>
+                  </tr>
+                  <tr style="background-color: #FAFAFA;" data-ref="ASSMT-26-02" title="Click to view assessment invoice">
+                    <td>Aug 01, 2026</td>
+                    <td><span class="receipt-ref-badge" data-ref="ASSMT-26-02">ASSMT-26-02 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span></td>
+                    <td>Computer & Tech Lab Levy</td>
+                    <td style="text-align: right; font-weight: 600; color: var(--text-main);">₱3,500.00</td>
+                    <td style="text-align: right; color: var(--text-muted);">—</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--text-main);">₱22,000.00</td>
+                  </tr>
+                  <tr style="background-color: #FAFAFA;" data-ref="ASSMT-26-03" title="Click to view assessment invoice">
+                    <td>Aug 01, 2026</td>
+                    <td><span class="receipt-ref-badge" data-ref="ASSMT-26-03">ASSMT-26-03 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span></td>
+                    <td>Registration & Activity Fee</td>
+                    <td style="text-align: right; font-weight: 600; color: var(--text-main);">₱2,500.00</td>
+                    <td style="text-align: right; color: var(--text-muted);">—</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--text-main);">₱24,500.00</td>
+                  </tr>
+                  <tr data-ref="OR-BDO-33109" title="Click to view Official Receipt">
+                    <td>Aug 05, 2026</td>
+                    <td><span class="receipt-ref-badge" data-ref="OR-BDO-33109">OR-BDO-33109 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span></td>
+                    <td>Downpayment (BDO Transfer)</td>
+                    <td style="text-align: right; color: var(--text-muted);">—</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--success);">₱4,650.00</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--text-main);">₱19,850.00</td>
+                  </tr>
+                  <tr data-ref="OR-MYA-77401" title="Click to view Official Receipt">
+                    <td>Aug 22, 2026</td>
+                    <td><span class="receipt-ref-badge" data-ref="OR-MYA-77401">OR-MYA-77401 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span></td>
+                    <td>Prelim Payment (Maya Pay)</td>
+                    <td style="text-align: right; color: var(--text-muted);">—</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--success);">₱5,000.00</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--text-main);">₱14,850.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Official Accounting Summary Reconciliation Footer -->
+          <div style="margin-top: 18px; border-top: 2px solid var(--border-color); padding-top: 14px;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; background: var(--bg-app); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <div>
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Total Assessment</div>
+                <div style="font-family: var(--font-title); font-size: 16px; font-weight: 700; color: var(--text-main); margin-top: 2px;" id="total-assessment-display">₱24,500.00</div>
+              </div>
+              <div>
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Total Paid / Credited</div>
+                <div style="font-family: var(--font-title); font-size: 16px; font-weight: 700; color: var(--success); margin-top: 2px;" id="total-paid-display">₱9,650.00</div>
+              </div>
+              <div style="border-left: 2px solid var(--border-color); padding-left: 14px;">
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--primary); letter-spacing: 0.5px;">Outstanding Balance</div>
+                <div style="font-family: var(--font-title); font-size: 18px; font-weight: 800; color: var(--primary); margin-top: 2px;" id="net-outstanding-display">₱14,850.00</div>
+              </div>
+            </div>
+            <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-muted);">
+              <span>Next Installment Due Date: <strong>October 15, 2026</strong></span>
+              <span>Official Accounting Seal: <strong>UPHSD-FIN-2026</strong></span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- =======================================================
+       OFFICIAL SCHOOL RECEIPT MODAL (SOFT COPY)
+       ======================================================= -->
+  <div class="receipt-modal-backdrop" id="official-receipt-modal">
+    <div class="receipt-modal-container">
+      
+      <!-- Top Action Toolbar -->
+      <div class="receipt-toolbar">
+        <div class="receipt-toolbar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          <span>University Electronic Official Receipt (Soft Copy)</span>
+        </div>
+        <div class="receipt-toolbar-actions">
+          <button class="btn btn-secondary btn-sm" id="btn-print-receipt" style="color:var(--text-main); padding:6px 12px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            <span>Print Receipt</span>
+          </button>
+          <button class="receipt-close-btn" id="btn-close-receipt-modal" title="Close">&times;</button>
+        </div>
+      </div>
+
+      <!-- The Receipt Paper Sheet -->
+      <div class="receipt-sheet" id="printable-receipt-sheet">
+        
+        <!-- Official Header -->
+        <div class="receipt-header">
+          <div class="receipt-header-text">
+            <h2>University of Perpetual Help System DALTA</h2>
+            <p class="receipt-sub-addr">Molino Road, Molino 3, City of Bacoor, Cavite 4102</p>
+            <p class="receipt-sub-dept">Treasury & Accounting Division • Cashier Management Office</p>
+            <div class="receipt-title-badge" id="modal-rcpt-type-title">OFFICIAL RECEIPT</div>
+          </div>
+          <div class="receipt-header-serial">
+            <div class="serial-label">Official Receipt No.</div>
+            <div class="serial-number" id="modal-rcpt-or">OR-BDO-33109</div>
+            <div class="serial-date" id="modal-rcpt-datetime">Aug 05, 2026 • 10:42 AM</div>
+            <div class="serial-term-tag">1st Sem, A.Y. 2026–2027</div>
+          </div>
+        </div>
+
+        <div class="receipt-divider"></div>
+
+        <!-- Student & Transaction Info Grid -->
+        <div class="receipt-meta-grid">
+          <div class="rcpt-meta-item">
+            <span class="rcpt-meta-label">Received From (Student)</span>
+            <span class="rcpt-meta-val" id="modal-rcpt-student-name">Kelvin Charles Cancio</span>
+          </div>
+          <div class="rcpt-meta-item">
+            <span class="rcpt-meta-label">Student ID Number</span>
+            <span class="rcpt-meta-val" id="modal-rcpt-student-id">2023-01492</span>
+          </div>
+          <div class="rcpt-meta-item">
+            <span class="rcpt-meta-label">Degree Program & Year</span>
+            <span class="rcpt-meta-val" id="modal-rcpt-program">BS Computer Science • 3rd Year</span>
+          </div>
+          <div class="rcpt-meta-item">
+            <span class="rcpt-meta-label">Payment Channel / Mode</span>
+            <span class="rcpt-meta-val" id="modal-rcpt-channel">BDO Internet Banking / InstaPay</span>
+          </div>
+          <div class="rcpt-meta-item">
+            <span class="rcpt-meta-label">Payment Reference / Trace ID</span>
+            <span class="rcpt-meta-val monospace" id="modal-rcpt-channel-ref">BDO-REF-33109281-PH</span>
+          </div>
+          <div class="rcpt-meta-item">
+            <span class="rcpt-meta-label">Posting Status</span>
+            <span class="rcpt-meta-val status-cleared" id="modal-rcpt-status">PAID / AUDIT POSTED</span>
+          </div>
+        </div>
+
+        <!-- Particulars & Assessment Breakdown -->
+        <table class="receipt-items-table">
+          <thead>
+            <tr>
+              <th style="width: 8%;">No.</th>
+              <th style="width: 56%;">Particulars / Description</th>
+              <th style="width: 16%;">Ledger Code</th>
+              <th style="width: 20%; text-align: right;">Amount (PHP)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>01</td>
+              <td id="modal-rcpt-particulars">Downpayment (BDO Transfer)</td>
+              <td class="monospace" id="modal-rcpt-code">TUITION-CREDIT</td>
+              <td style="text-align: right; font-weight: 700;" id="modal-rcpt-amount">₱4,650.00</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="text-align: right; font-weight: 700; text-transform: uppercase;">Total Amount Credited:</td>
+              <td style="text-align: right; font-weight: 800; font-size: 15px; color: var(--primary);" id="modal-rcpt-total">₱4,650.00</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Amount In Words Box -->
+        <div class="receipt-amount-words-box">
+          <span class="amount-words-label">Amount in Words:</span>
+          <span class="amount-words-text" id="modal-rcpt-words">Four Thousand Six Hundred Fifty Pesos Only</span>
+        </div>
+
+        <!-- Verification & Signature Footer -->
+        <div class="receipt-footer-grid">
+          
+          <!-- Barcode & QR Code verification -->
+          <div class="receipt-verification-col">
+            <div class="receipt-barcode-wrap">
+              <svg class="barcode-svg" viewBox="0 0 200 35" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="3" height="35" fill="#000" />
+                <rect x="5" y="0" width="2" height="35" fill="#000" />
+                <rect x="10" y="0" width="4" height="35" fill="#000" />
+                <rect x="16" y="0" width="1" height="35" fill="#000" />
+                <rect x="20" y="0" width="5" height="35" fill="#000" />
+                <rect x="28" y="0" width="2" height="35" fill="#000" />
+                <rect x="33" y="0" width="3" height="35" fill="#000" />
+                <rect x="39" y="0" width="6" height="35" fill="#000" />
+                <rect x="48" y="0" width="2" height="35" fill="#000" />
+                <rect x="53" y="0" width="4" height="35" fill="#000" />
+                <rect x="60" y="0" width="2" height="35" fill="#000" />
+                <rect x="65" y="0" width="5" height="35" fill="#000" />
+                <rect x="73" y="0" width="1" height="35" fill="#000" />
+                <rect x="77" y="0" width="4" height="35" fill="#000" />
+                <rect x="84" y="0" width="3" height="35" fill="#000" />
+                <rect x="90" y="0" width="5" height="35" fill="#000" />
+                <rect x="98" y="0" width="2" height="35" fill="#000" />
+                <rect x="103" y="0" width="4" height="35" fill="#000" />
+                <rect x="110" y="0" width="3" height="35" fill="#000" />
+                <rect x="116" y="0" width="5" height="35" fill="#000" />
+                <rect x="124" y="0" width="2" height="35" fill="#000" />
+                <rect x="129" y="0" width="4" height="35" fill="#000" />
+                <rect x="136" y="0" width="1" height="35" fill="#000" />
+                <rect x="140" y="0" width="5" height="35" fill="#000" />
+                <rect x="148" y="0" width="3" height="35" fill="#000" />
+                <rect x="154" y="0" width="4" height="35" fill="#000" />
+                <rect x="161" y="0" width="2" height="35" fill="#000" />
+                <rect x="166" y="0" width="5" height="35" fill="#000" />
+                <rect x="174" y="0" width="3" height="35" fill="#000" />
+                <rect x="180" y="0" width="4" height="35" fill="#000" />
+                <rect x="187" y="0" width="2" height="35" fill="#000" />
+                <rect x="192" y="0" width="4" height="35" fill="#000" />
+              </svg>
+            </div>
+            <div class="verification-hash-text" id="modal-rcpt-hash">UPHSD-AUTH-8921-FA02-2026</div>
+            <div class="verification-qr-caption">Electronic Verification Key • MOLINO CAMPUS</div>
+          </div>
+
+          <!-- Official Stamp Seal (Circular Green Seal) -->
+          <div class="receipt-stamp-col">
+            <svg class="official-stamp-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#059669" stroke-width="2.5" stroke-dasharray="6,3" />
+              <circle cx="60" cy="60" r="48" fill="rgba(16, 185, 129, 0.04)" stroke="#059669" stroke-width="1.5" />
+              <path id="stamp-arc-top" d="M 18,60 A 42,42 0 0,1 102,60" fill="none" />
+              <path id="stamp-arc-bot" d="M 102,60 A 42,42 0 0,1 18,60" fill="none" />
+              <text font-size="7" font-weight="800" fill="#059669" letter-spacing="1.2">
+                <textPath href="#stamp-arc-top" startOffset="50%" text-anchor="middle">★ UPHSD TREASURY DIVISION ★</textPath>
+              </text>
+              <text font-size="6.5" font-weight="700" fill="#059669" letter-spacing="1">
+                <textPath href="#stamp-arc-bot" startOffset="50%" text-anchor="middle">MOLINO CAMPUS • AUDIT VALIDATED</textPath>
+              </text>
+              <text x="60" y="55" font-family="'Outfit', sans-serif" font-weight="800" font-size="11" fill="#059669" text-anchor="middle">OFFICIAL</text>
+              <text x="60" y="67" font-family="'Outfit', sans-serif" font-weight="800" font-size="11" fill="#059669" text-anchor="middle">RECEIPT</text>
+              <text x="60" y="77" font-size="7" font-weight="600" fill="#059669" text-anchor="middle">A.Y. 2026-2027</text>
+            </svg>
+          </div>
+
+          <!-- Cashier Electronic Signature -->
+          <div class="receipt-signature-col">
+            <div class="signature-line-box">
+              <svg class="signature-svg" viewBox="0 0 160 50" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 10 35 C 30 10, 45 40, 60 15 C 75 35, 90 20, 110 30 C 130 15, 140 40, 155 25" fill="none" stroke="#1E3A8A" stroke-width="2" stroke-linecap="round" />
+                <path d="M 35 28 Q 70 38 120 22" fill="none" stroke="#1E3A8A" stroke-width="1.5" />
+              </svg>
+            </div>
+            <div class="signatory-name">Ma. Teresa Reyes, CPA</div>
+            <div class="signatory-title">Chief University Cashier & Comptroller</div>
+            <div class="signatory-dept">Electronic Certificate: CERT-UPHSD-01</div>
+          </div>
+
+        </div>
+
+        <!-- Disclaimer Banner -->
+        <div class="receipt-legal-note">
+          Notice: This is an electronically generated Official Receipt issued by the University of Perpetual Help System DALTA under R.A. 8792 (Electronic Commerce Act of 2000). Valid for student assessment clearance, enrollment verification, and accounting reconciliation.
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="finance-store.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Card Flip Toggling
+      const card = document.getElementById('tuition-card-flip');
+      if (card) {
+        card.addEventListener('click', () => {
+          card.classList.toggle('is-flipped');
+        });
+      }
+
+      // 2. Load Shared Finance State
+      const state = PerpetualFinanceStore.getFinanceState();
+      const RECEIPT_DATABASE = state.receipts;
+
+      const balanceDisplay = document.getElementById('card-balance-display');
+      const ledgerBody = document.getElementById('ledger-body');
+      const totalPaidDisplay = document.getElementById('total-paid-display');
+      const netOutstandingDisplay = document.getElementById('net-outstanding-display');
+
+      if (balanceDisplay) {
+        balanceDisplay.textContent = `₱${state.cardBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+      if (totalPaidDisplay) {
+        totalPaidDisplay.textContent = `₱${state.totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+      if (netOutstandingDisplay) {
+        netOutstandingDisplay.textContent = `₱${state.outstandingBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+
+      // Receipt UI Elements
+      const receiptPromptBox = document.getElementById('receipt-prompt-box');
+      const promptRefTag = document.getElementById('prompt-ref-tag');
+      const promptTitleText = document.getElementById('prompt-title-text');
+      const promptMetaText = document.getElementById('prompt-meta-text');
+      const promptAmountVal = document.getElementById('prompt-amount-val');
+      const btnOpenPromptReceipt = document.getElementById('btn-open-prompt-receipt');
+      const btnDismissPrompt = document.getElementById('btn-dismiss-prompt');
+
+      const officialReceiptModal = document.getElementById('official-receipt-modal');
+      const btnCloseReceiptModal = document.getElementById('btn-close-receipt-modal');
+      const btnPrintReceipt = document.getElementById('btn-print-receipt');
+
+      let currentSelectedRef = null;
+
+      // Show Receipt Prompt Box on Row Click
+      function showReceiptPrompt(refId, rowElem) {
+        if (!refId || !RECEIPT_DATABASE[refId]) return;
+        currentSelectedRef = refId;
+        const receipt = RECEIPT_DATABASE[refId];
+
+        // Highlight selected row
+        document.querySelectorAll('#ledger-body tr').forEach(r => r.classList.remove('selected-ledger-row'));
+        if (rowElem) {
+          rowElem.classList.add('selected-ledger-row');
+        }
+
+        // Populate prompt box
+        promptRefTag.textContent = receipt.orNumber;
+        promptTitleText.textContent = receipt.title;
+        promptMetaText.textContent = `${receipt.date} • ${receipt.channel} • Verified Treasury Record`;
+        promptAmountVal.textContent = `₱${receipt.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        receiptPromptBox.style.display = 'flex';
+      }
+
+      // Open Soft Copy Official Receipt Modal
+      function openOfficialReceipt(refId) {
+        if (!refId || !RECEIPT_DATABASE[refId]) return;
+        const receipt = RECEIPT_DATABASE[refId];
+
+        // Get student info from active session
+        const session = typeof getPortalSession === 'function' ? getPortalSession() : null;
+        const studentName = session ? session.fullName : "Kelvin Charles Cancio";
+        const studentId = session ? session.studentId : "2023-01492";
+        const program = session ? session.program : "BS Computer Science";
+        const yearLevel = session ? session.yearLevel : "3rd Year (Junior)";
+
+        // Populate Modal Fields
+        document.getElementById('modal-rcpt-type-title').textContent = receipt.type === 'debit' ? 'ASSESSMENT INVOICE' : 'OFFICIAL RECEIPT';
+        document.getElementById('modal-rcpt-or').textContent = receipt.orNumber;
+        document.getElementById('modal-rcpt-datetime').textContent = `${receipt.date} • ${receipt.time}`;
+        document.getElementById('modal-rcpt-student-name').textContent = studentName;
+        document.getElementById('modal-rcpt-student-id').textContent = studentId;
+        document.getElementById('modal-rcpt-program').textContent = `${program} • ${yearLevel}`;
+        document.getElementById('modal-rcpt-channel').textContent = receipt.channel;
+        document.getElementById('modal-rcpt-channel-ref').textContent = receipt.channelRef;
+        document.getElementById('modal-rcpt-status').textContent = receipt.status;
+        document.getElementById('modal-rcpt-particulars').textContent = receipt.particulars;
+        document.getElementById('modal-rcpt-code').textContent = receipt.accountCode;
+        
+        const formattedAmount = `₱${receipt.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById('modal-rcpt-amount').textContent = formattedAmount;
+        document.getElementById('modal-rcpt-total').textContent = formattedAmount;
+        document.getElementById('modal-rcpt-words').textContent = receipt.amountWords;
+        document.getElementById('modal-rcpt-hash').textContent = `UPHSD-AUTH-${receipt.orNumber.replace(/[^A-Z0-9]/g, '')}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+        officialReceiptModal.classList.add('show');
+      }
+
+      // Print Receipt
+      function printOfficialReceipt() {
+        document.body.classList.add('printing-receipt');
+        window.print();
+        setTimeout(() => {
+          document.body.classList.remove('printing-receipt');
+        }, 500);
+      }
+
+      // Attach Prompt Box button actions
+      btnOpenPromptReceipt.addEventListener('click', () => {
+        if (currentSelectedRef) {
+          openOfficialReceipt(currentSelectedRef);
+        }
+      });
+
+      btnDismissPrompt.addEventListener('click', () => {
+        receiptPromptBox.style.display = 'none';
+        document.querySelectorAll('#ledger-body tr').forEach(r => r.classList.remove('selected-ledger-row'));
+        currentSelectedRef = null;
+      });
+
+      btnCloseReceiptModal.addEventListener('click', () => {
+        officialReceiptModal.classList.remove('show');
+      });
+
+      btnPrintReceipt.addEventListener('click', printOfficialReceipt);
+
+      officialReceiptModal.addEventListener('click', (e) => {
+        if (e.target === officialReceiptModal) {
+          officialReceiptModal.classList.remove('show');
+        }
+      });
+
+      // Bind Row Click Events on Ledger
+      function bindLedgerRowEvents(row) {
+        row.addEventListener('click', (e) => {
+          // If clicked ref badge directly, open receipt modal immediately
+          const badge = e.target.closest('.receipt-ref-badge');
+          if (badge) {
+            const ref = badge.getAttribute('data-ref');
+            openOfficialReceipt(ref);
+            return;
+          }
+
+          // Otherwise show contextual 'View receipt' box
+          const ref = row.getAttribute('data-ref');
+          if (ref) {
+            showReceiptPrompt(ref, row);
+          }
+        });
+      }
+
+      // Render transactions dynamically from shared store
+      function renderLedgerTable(transactions) {
+        if (!ledgerBody) return;
+        ledgerBody.innerHTML = '';
+        transactions.forEach(tx => {
+          const tr = document.createElement('tr');
+          tr.setAttribute('data-ref', tx.ref);
+          tr.setAttribute('title', 'Click to view official receipt / assessment invoice');
+          if (tx.debit) {
+            tr.style.backgroundColor = '#FAFAFA';
+          }
+
+          const debitStr = tx.debit ? `₱${parseFloat(tx.debit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
+          const creditStr = tx.credit ? `₱${parseFloat(tx.credit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
+          const balanceStr = `₱${parseFloat(tx.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+          tr.innerHTML = `
+            <td>${tx.date}</td>
+            <td><span class="receipt-ref-badge" data-ref="${tx.ref}">${tx.ref} <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span></td>
+            <td>${tx.particulars}</td>
+            <td style="text-align: right; font-weight: ${tx.debit ? '600' : '400'}; color: ${tx.debit ? 'var(--text-main)' : 'var(--text-muted)'};">${debitStr}</td>
+            <td style="text-align: right; font-weight: 700; color: ${tx.credit ? 'var(--success)' : 'var(--text-muted)'};">${creditStr}</td>
+            <td style="text-align: right; font-weight: 700; color: var(--primary);">${balanceStr}</td>
+          `;
+          bindLedgerRowEvents(tr);
+          ledgerBody.appendChild(tr);
+        });
+      }
+
+      renderLedgerTable(state.transactions);
+    });
+  </script>
+  <script src="auth.js"></script>
+</body>
+</html>

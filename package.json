@@ -1,0 +1,20 @@
+{
+  "name": "pulse-student-portal",
+  "version": "1.0.0",
+  "description": "Sleek, clean, professional blue & white student portal prototype",
+  "main": "index.html",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "student-portal",
+    "dashboard",
+    "vanilla-js"
+  ],
+  "author": "Antigravity",
+  "license": "ISC",
+  "dependencies": {
+    "docx": "^9.7.2",
+    "pptxgenjs": "^4.0.1"
+  }
+}

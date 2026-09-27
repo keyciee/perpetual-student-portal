@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse Student Portal - Settings</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+    }
+    
+    /* Settings specific fields */
+    .settings-group {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .form-group-settings {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .settings-input {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+    
+    .settings-input:focus {
+      border-color: var(--primary);
+    }
+    
+    /* Toggle switch styles */
+    .preference-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .preference-row:last-child {
+      border-bottom: none;
+    }
+    
+    .preference-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    
+    .preference-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    
+    .preference-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    
+    /* Switch component style */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #E2E8F0;
+      transition: .3s;
+      border-radius: 24px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+    }
+    
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+    
+    .avatar-preview-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .avatar-large {
+      width: 56px;
+      height: 56px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- --- Left Sidebar Navigation --- -->
+    <aside class="sidebar">
+      <div class="logo-section">
+        <span class="logo-text">University of Perpetual Help System Dalta</span>
+      </div>
+
+      <nav class="nav-menu">
+        <li class="nav-item">
+          <a href="index.html">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="academics.html">
+            <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Academics Hub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="finance.html">
+            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            Finance & Tuition
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="settings.html">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            Portal Settings
+          </a>
+        </li>
+      </nav>
+
+      <div class="user-profile-summary">
+        <div class="user-profile-row">
+          <svg class="profile-avatar" id="sidebar-avatar" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="48" fill="url(#avatarGrad)" />
+            <text x="50%" y="55%" id="sidebar-avatar-text" dominant-baseline="middle" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="700" font-size="36" fill="#7A0C2E">KC</text>
+          </svg>
+          <div class="profile-info">
+            <span class="profile-name" id="sidebar-profile-name">Kelvin Charles Cancio</span>
+            <span class="profile-role" id="sidebar-profile-major">3rd Year • BS CS</span>
+          </div>
+        </div>
+        <button class="btn-sidebar-logout" id="logout-btn" title="Sign out of student portal">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- --- Main Workspace Area --- -->
+    <main class="main-workspace">
+      
+      <!-- --- Header --- -->
+      <header class="workspace-header">
+        <div class="welcome-msg">
+          <h1>Portal Settings</h1>
+          <p>Configure notifications, edit profile info, and adjust application settings.</p>
+        </div>
+        <div class="header-actions">
+          <div class="date-badge">
+            <span id="header-date-text">Wednesday, Jul 29, 2026</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- --- Settings Grid System --- -->
+      <div class="settings-grid">
+        
+        <!-- Profile Customizations (Col 6) -->
+        <section class="settings-group col-6">
+          <h3 class="card-title-main">Personal Information</h3>
+
+          <div class="avatar-preview-section">
+            <svg class="profile-avatar avatar-large" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="48" fill="url(#avatarGrad)" />
+              <text x="50%" y="55%" id="large-avatar-text" dominant-baseline="middle" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="700" font-size="36" fill="#7A0C2E">SN</text>
+            </svg>
+            <div>
+              <p style="font-weight:600; font-size:13px;">Avatar Initials</p>
+              <p style="color:var(--text-muted); font-size:11px;">Auto-generated from your profile name.</p>
+            </div>
+          </div>
+
+          <form id="profile-edit-form" onsubmit="return false;">
+            <div class="form-group-settings">
+              <label class="form-label" style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Full Name</label>
+              <input class="settings-input" type="text" id="input-full-name" value="Student Name" required>
+            </div>
+            
+            <div class="form-group-settings" style="margin-top:12px;">
+              <label class="form-label" style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Academic Major</label>
+              <input class="settings-input" type="text" id="input-major" value="Computer Science" required>
+            </div>
+
+            <div class="form-group-settings" style="margin-top:12px;">
+              <label class="form-label" style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Student Email</label>
+              <input class="settings-input" type="email" id="input-email" value="student.name@perpetual.edu.ph" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top:20px; width:100%; justify-content:center;">
+              Apply Profile Changes
+            </button>
+          </form>
+        </section>
+
+        <!-- Preference Toggles (Col 6) -->
+        <section class="settings-group col-6">
+          <h3 class="card-title-main">Portal Preferences</h3>
+
+          <div class="preference-list">
+            
+            <div class="preference-row">
+              <div class="preference-info">
+                <span class="preference-title">AI Schedule Assistant</span>
+                <span class="preference-desc">Display AI calendar hints and time management alerts.</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="preference-row">
+              <div class="preference-info">
+                <span class="preference-title">Grade Notifications</span>
+                <span class="preference-desc">Receive popups when professors post midterm/final grades.</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="preference-row">
+              <div class="preference-info">
+                <span class="preference-title">Fast Payment Checkout</span>
+                <span class="preference-desc">Remember card placeholders inside payment invoices.</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+          </div>
+
+          <button class="btn btn-secondary" onclick="alert('Preferences saved successfully!')" style="width:100%; justify-content:center; margin-top:20px;">
+            Save Preferences
+          </button>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('profile-edit-form');
+      const inputName = document.getElementById('input-full-name');
+      const inputMajor = document.getElementById('input-major');
+      const inputEmail = document.getElementById('input-email');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const nameValue = inputName.value.trim();
+        const majorValue = inputMajor.value.trim();
+        const emailValue = inputEmail ? inputEmail.value.trim() : '';
+
+        if (typeof updatePortalProfile === 'function') {
+          updatePortalProfile({
+            fullName: nameValue,
+            major: majorValue,
+            email: emailValue
+          });
+        }
+
+        alert('Profile details updated and synced across all portal modules!');
+      });
+    });
+  </script>
+</body>
+</html>

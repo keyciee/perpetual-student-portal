@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University of Perpetual Help System DALTA - Student Portal Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page-body">
+
+  <div class="login-container">
+    
+    <!-- ==========================================
+         LEFT: Institutional Brand & Showcase Panel
+         ========================================== -->
+    <section class="login-brand-panel">
+      <div class="brand-glow-1"></div>
+      <div class="brand-glow-2"></div>
+
+      <!-- Top Header & Crest -->
+      <div class="brand-panel-header">
+        <div class="brand-seal-row">
+          <div class="brand-titles">
+            <h2>University of Perpetual Help</h2>
+            <p>System DALTA • Molino Campus</p>
+          </div>
+        </div>
+
+        <div class="brand-motto-tag">
+          Character Building is Nation Building
+        </div>
+      </div>
+
+
+      <!-- Bottom Panel Footer -->
+      <div class="brand-panel-footer">
+        <span>Academic & Financial Management Portal</span>
+        <span>CGID Group 1 Prototype</span>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         RIGHT: Interactive Authentication Card
+         ========================================== -->
+    <main class="login-form-panel">
+      <div class="login-card-box">
+        
+        <!-- Header & Status Badge -->
+        <div class="login-card-badge">
+          <span class="status-dot"></span>
+          Academic Year 2026–2027 • Term Online
+        </div>
+
+        <h1>Student Portal Login</h1>
+        <p class="login-subtext">
+          Sign in with your Student ID or institutional email to access your personal academic records and financial balance.
+        </p>
+
+        <!-- Status / Alert Message Box -->
+        <div class="login-alert" id="login-alert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span id="login-alert-text">Alert message</span>
+        </div>
+
+        <!-- Authentication Form -->
+        <form id="portal-login-form" autocomplete="on">
+          
+          <!-- Student ID / Email Field -->
+          <div class="login-input-group">
+            <label for="login-identifier">Student ID / Institutional Email</label>
+            <div class="login-input-wrapper">
+              <span class="input-icon-left">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </span>
+              <input 
+                type="text" 
+                id="login-identifier" 
+                class="login-input" 
+                placeholder="e.g. 2023-01492 or student@perpetual.edu.ph"
+                required 
+                autocomplete="username"
+              >
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="login-input-group">
+            <label for="login-password">Password</label>
+            <div class="login-input-wrapper">
+              <span class="input-icon-left">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              </span>
+              <input 
+                type="password" 
+                id="login-password" 
+                class="login-input" 
+                placeholder="Enter your student password" 
+                required 
+                autocomplete="current-password"
+                value="perpetual2026"
+              >
+              <button type="button" class="btn-toggle-eye" id="btn-toggle-password" title="Toggle password visibility">
+                <svg id="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Options Row -->
+          <div class="login-options-row">
+            <label class="remember-checkbox-label">
+              <input type="checkbox" id="remember-student" checked>
+              <span>Remember Student ID</span>
+            </label>
+            <a href="javascript:void(0)" class="forgot-link" id="btn-open-help">Forgot Password / Help</a>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-login-submit" id="btn-submit-login">
+            <span id="btn-submit-text">Sign In to Student Portal →</span>
+            <div class="btn-login-spinner" id="btn-submit-spinner"></div>
+          </button>
+        </form>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ==========================================
+       Student Help & Support Modal
+       ========================================== -->
+  <div class="login-modal-overlay" id="help-modal">
+    <div class="login-modal-box">
+      <div class="modal-header-row">
+        <h3>Student Account Assistance</h3>
+        <button class="btn-modal-close" id="btn-close-help">&times;</button>
+      </div>
+      <div class="modal-body-content">
+        <p>To access the University of Perpetual Help System DALTA Student Portal, use your official Student ID Number and password.</p>
+        <ul style="margin: 12px 0 16px 20px; line-height: 1.6; font-size: 13px;">
+          <li><strong>Default Student Credentials:</strong> Student ID: <code>2023-01492</code> • Password: <code>perpetual2026</code></li>
+          <li><strong>Password Reset:</strong> Contact the University MIS Department or visit the Registrar's Office.</li>
+          <li><strong>Campus Support:</strong> Inquiries may be directed to <code>support@perpetualdalta.edu.ph</code>.</li>
+        </ul>
+        <button class="btn btn-primary" id="btn-modal-dismiss" style="width: 100%; justify-content: center;">
+          Understood, Continue
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Include Core Auth Script -->
+  <script src="auth.js"></script>
+
+  <!-- Login Page Controller Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm = document.getElementById('portal-login-form');
+      const inputId = document.getElementById('login-identifier');
+      const inputPassword = document.getElementById('login-password');
+      const rememberCheckbox = document.getElementById('remember-student');
+      const submitBtn = document.getElementById('btn-submit-login');
+      const submitText = document.getElementById('btn-submit-text');
+      const submitSpinner = document.getElementById('btn-submit-spinner');
+      const alertBox = document.getElementById('login-alert');
+      const alertText = document.getElementById('login-alert-text');
+      const togglePasswordBtn = document.getElementById('btn-toggle-password');
+      const eyeIcon = document.getElementById('eye-icon');
+      
+      const helpModal = document.getElementById('help-modal');
+      const openHelpBtn = document.getElementById('btn-open-help');
+      const closeHelpBtn = document.getElementById('btn-close-help');
+      const dismissModalBtn = document.getElementById('btn-modal-dismiss');
+      // 1. Check for stored saved ID
+      const savedId = localStorage.getItem('perpetual_saved_student_id');
+      if (savedId) {
+        inputId.value = savedId;
+      } else {
+        inputId.value = '2023-01492'; // Default sample ID
+      }
+
+      // 2. Check query params for logout notification
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('logout') === 'true') {
+        showAlert('You have been successfully signed out.', 'info');
+      }
+
+      // 3. Password Show/Hide Toggle
+      togglePasswordBtn.addEventListener('click', () => {
+        const isPassword = inputPassword.type === 'password';
+        inputPassword.type = isPassword ? 'text' : 'password';
+        eyeIcon.innerHTML = isPassword 
+          ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>'
+          : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+      });
+
+      // 4. Alert helper
+      function showAlert(msg, type = 'error') {
+        alertText.textContent = msg;
+        alertBox.className = `login-alert show ${type}`;
+      }
+
+      function hideAlert() {
+        alertBox.className = 'login-alert';
+      }
+
+      // 5. Form submission handler
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        hideAlert();
+
+        const idVal = inputId.value.trim();
+        const passVal = inputPassword.value.trim();
+
+        if (!idVal) {
+          showAlert('Please enter your Student ID or institutional email.');
+          inputId.focus();
+          return;
+        }
+
+        if (!passVal) {
+          showAlert('Please enter your password.');
+          inputPassword.focus();
+          return;
+        }
+
+        // Show loading state
+        submitBtn.disabled = true;
+        submitText.textContent = 'Authenticating...';
+        submitSpinner.style.display = 'block';
+
+        // Simulate smooth authenticating delay
+        setTimeout(() => {
+          try {
+            const user = authenticateUser(idVal, passVal, rememberCheckbox.checked);
+            showAlert(`Welcome, ${user.fullName}! Redirecting to dashboard...`, 'success');
+            
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 650);
+          } catch (err) {
+            showAlert('Authentication error. Please try again.');
+            submitBtn.disabled = false;
+            submitText.textContent = 'Sign In to Student Portal →';
+            submitSpinner.style.display = 'none';
+          }
+        }, 600);
+      });
+
+      // 7. Help Modal Controls
+      openHelpBtn.addEventListener('click', () => {
+        helpModal.classList.add('show');
+      });
+
+      const closeModal = () => {
+        helpModal.classList.remove('show');
+      };
+
+      closeHelpBtn.addEventListener('click', closeModal);
+      dismissModalBtn.addEventListener('click', closeModal);
+      helpModal.addEventListener('click', (e) => {
+        if (e.target === helpModal) closeModal();
+      });
+    });
+  </script>
+</body>
+</html>
