@@ -888,11 +888,11 @@
         <div class="user-profile-row">
           <svg class="profile-avatar" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <circle cx="50" cy="50" r="48" fill="url(#avatarGrad)" />
-            <text class="user-avatar-initials" x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="700" font-size="36" fill="#7A0C2E">KC</text>
+            <text class="user-avatar-initials" x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="700" font-size="36" fill="#7A0C2E">AR</text>
           </svg>
           <div class="profile-info">
-            <span class="profile-name">Kelvin Charles Cancio</span>
-            <span class="profile-role">3rd Year • BS CS</span>
+            <span class="profile-name">Alexander M. Reyes</span>
+            <span class="profile-role">3rd Year • BS IT</span>
           </div>
         </div>
         <button class="btn-sidebar-logout" id="logout-btn" title="Sign out of student portal">
@@ -942,7 +942,7 @@
                 <div class="t-card-footer">
                   <div>
                     <div style="font-size: 8px; opacity: 0.6; text-transform: uppercase;">Student Account</div>
-                    <div id="finance-card-student">Kelvin Charles Cancio (2023-01492)</div>
+                    <div id="finance-card-student">Alexander M. Reyes (2023-01492)</div>
                   </div>
                   <div style="text-align: right;">
                     <div style="font-size: 8px; opacity: 0.6; text-transform: uppercase;">Status</div>
@@ -1027,11 +1027,11 @@
               </div>
               <div>
                 <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 600;">Student Name</div>
-                <div style="font-weight: 700; color: var(--text-main);" id="finance-ledger-student-name">Kelvin Charles Cancio</div>
+                <div style="font-weight: 700; color: var(--text-main);" id="finance-ledger-student-name">Alexander M. Reyes</div>
               </div>
               <div>
                 <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 600;">Degree Program</div>
-                <div style="font-weight: 700; color: var(--text-main);">BS Computer Science</div>
+                <div style="font-weight: 700; color: var(--text-main);">BS Information Technology</div>
               </div>
               <div>
                 <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 600;">Accounting Status</div>
@@ -1196,7 +1196,7 @@
         <div class="receipt-meta-grid">
           <div class="rcpt-meta-item">
             <span class="rcpt-meta-label">Received From (Student)</span>
-            <span class="rcpt-meta-val" id="modal-rcpt-student-name">Kelvin Charles Cancio</span>
+            <span class="rcpt-meta-val" id="modal-rcpt-student-name">Alexander M. Reyes</span>
           </div>
           <div class="rcpt-meta-item">
             <span class="rcpt-meta-label">Student ID Number</span>
@@ -1204,7 +1204,7 @@
           </div>
           <div class="rcpt-meta-item">
             <span class="rcpt-meta-label">Degree Program & Year</span>
-            <span class="rcpt-meta-val" id="modal-rcpt-program">BS Computer Science • 3rd Year</span>
+            <span class="rcpt-meta-val" id="modal-rcpt-program">BS Information Technology • 3rd Year</span>
           </div>
           <div class="rcpt-meta-item">
             <span class="rcpt-meta-label">Payment Channel / Mode</span>
@@ -1415,9 +1415,9 @@
 
         // Get student info from active session
         const session = typeof getPortalSession === 'function' ? getPortalSession() : null;
-        const studentName = session ? session.fullName : "Kelvin Charles Cancio";
+        const studentName = session ? session.fullName : "Alexander M. Reyes";
         const studentId = session ? session.studentId : "2023-01492";
-        const program = session ? session.program : "BS Computer Science";
+        const program = session ? session.program : "BS Information Technology";
         const yearLevel = session ? session.yearLevel : "3rd Year (Junior)";
 
         // Populate Modal Fields

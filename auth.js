@@ -7,18 +7,18 @@
 const AUTH_STORAGE_KEY = 'perpetual_portal_session';
 const SAVED_ID_KEY = 'perpetual_saved_student_id';
 
-// Pre-configured Demo Student Profiles (matching Group 1 project context)
+// Pre-configured Demo Student Profiles (Neutral demonstration student)
 const DEMO_STUDENT_PROFILES = {
   "2023-01492": {
     studentId: "2023-01492",
-    fullName: "Kelvin Charles Cancio",
-    firstName: "Kelvin",
-    email: "k.cancio@perpetual.edu.ph",
-    major: "Computer Science",
-    majorShort: "BS CS",
-    program: "BS Computer Science",
+    fullName: "Alexander M. Reyes",
+    firstName: "Alexander",
+    email: "a.reyes@perpetual.edu.ph",
+    major: "Information Technology",
+    majorShort: "BS IT",
+    program: "BS Information Technology",
     yearLevel: "3rd Year (Junior)",
-    initials: "KC",
+    initials: "AR",
     status: "Regular / Dean's Lister",
     completedCredits: "78 / 144 Units",
     gpa: "3.78",
@@ -27,14 +27,14 @@ const DEMO_STUDENT_PROFILES = {
   },
   "2023-01104": {
     studentId: "2023-01104",
-    fullName: "Yeshua Cyrus Bautista",
-    firstName: "Yeshua",
-    email: "y.bautista@perpetual.edu.ph",
-    major: "Computer Science",
-    majorShort: "BS CS",
-    program: "BS Computer Science",
+    fullName: "Gabriel M. Dela Cruz",
+    firstName: "Gabriel",
+    email: "g.delacruz@perpetual.edu.ph",
+    major: "Information Technology",
+    majorShort: "BS IT",
+    program: "BS Information Technology",
     yearLevel: "3rd Year (Junior)",
-    initials: "YB",
+    initials: "GD",
     status: "Regular / President's Lister",
     completedCredits: "81 / 144 Units",
     gpa: "3.85",
@@ -43,14 +43,14 @@ const DEMO_STUDENT_PROFILES = {
   },
   "2023-01822": {
     studentId: "2023-01822",
-    fullName: "Angella Shaolla Casul",
-    firstName: "Angella",
-    email: "a.casul@perpetual.edu.ph",
-    major: "Computer Science",
-    majorShort: "BS CS",
-    program: "BS Computer Science",
+    fullName: "Samantha Nicole Santos",
+    firstName: "Samantha",
+    email: "s.santos@perpetual.edu.ph",
+    major: "Information Technology",
+    majorShort: "BS IT",
+    program: "BS Information Technology",
     yearLevel: "3rd Year (Junior)",
-    initials: "AC",
+    initials: "SS",
     status: "Regular / University Scholar",
     completedCredits: "84 / 144 Units",
     gpa: "3.90",
@@ -59,14 +59,14 @@ const DEMO_STUDENT_PROFILES = {
   },
   "2023-01550": {
     studentId: "2023-01550",
-    fullName: "John Christian Estay",
-    firstName: "John",
-    email: "j.estay@perpetual.edu.ph",
-    major: "Computer Science",
-    majorShort: "BS CS",
-    program: "BS Computer Science",
+    fullName: "Christian Dale Mendoza",
+    firstName: "Christian",
+    email: "c.mendoza@perpetual.edu.ph",
+    major: "Information Technology",
+    majorShort: "BS IT",
+    program: "BS Information Technology",
     yearLevel: "3rd Year (Junior)",
-    initials: "JE",
+    initials: "CM",
     status: "Regular / Good Standing",
     completedCredits: "78 / 144 Units",
     gpa: "3.72",
@@ -75,12 +75,12 @@ const DEMO_STUDENT_PROFILES = {
   },
   "2023-01688": {
     studentId: "2023-01688",
-    fullName: "Mickey John Roldan",
-    firstName: "Mickey",
-    email: "m.roldan@perpetual.edu.ph",
-    major: "Computer Science",
-    majorShort: "BS CS",
-    program: "BS Computer Science",
+    fullName: "Marc Dominic Ramos",
+    firstName: "Marc",
+    email: "m.ramos@perpetual.edu.ph",
+    major: "Information Technology",
+    majorShort: "BS IT",
+    program: "BS Information Technology",
     yearLevel: "3rd Year (Junior)",
     initials: "MR",
     status: "Regular / Good Standing",
@@ -159,9 +159,9 @@ function authenticateUser(identifier, password, remember = false) {
       fullName: formattedName,
       firstName: formattedName.split(' ')[0],
       email: isEmail ? trimmed : `${studentId.toLowerCase()}@perpetual.edu.ph`,
-      major: "Computer Science",
-      majorShort: "BS CS",
-      program: "BS Computer Science",
+      major: "Information Technology",
+      majorShort: "BS IT",
+      program: "BS Information Technology",
       yearLevel: "3rd Year (Junior)",
       initials: getInitials(formattedName),
       status: "Regular / Good Standing",
@@ -210,7 +210,7 @@ function hydratePortalUI() {
   });
 
   document.querySelectorAll('.profile-role, #sidebar-profile-major').forEach(el => {
-    el.textContent = `${session.yearLevel.split(' ')[0]} Year • ${session.majorShort || 'BS CS'}`;
+    el.textContent = `${session.yearLevel.split(' ')[0]} Year • ${session.majorShort || 'BS IT'}`;
   });
 
   document.querySelectorAll('.user-avatar-initials, #sidebar-avatar-text, #large-avatar-text').forEach(el => {
@@ -283,7 +283,7 @@ function hydratePortalUI() {
   if (inputFullName) inputFullName.value = session.fullName;
 
   const inputMajor = document.getElementById('input-major');
-  if (inputMajor) inputMajor.value = session.major || "Computer Science";
+  if (inputMajor) inputMajor.value = session.major || "Information Technology";
 
   const inputEmail = document.getElementById('input-email');
   if (inputEmail) inputEmail.value = session.email;

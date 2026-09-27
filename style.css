@@ -883,7 +883,7 @@ body {
 .brand-panel-header {
   position: relative;
   z-index: 2;
-  margin: auto 0;
+  margin: 0;
 }
 
 .brand-seal-row {
