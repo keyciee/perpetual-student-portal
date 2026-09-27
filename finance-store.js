@@ -144,8 +144,14 @@
   }
 
   function getFinanceState() {
+    // Ensure default card balance starts at exactly 0.00
+    if (!localStorage.getItem('perpetual_card_zero_v1')) {
+      localStorage.setItem(STORAGE_KEYS.CARD_BALANCE, '0.00');
+      localStorage.setItem('perpetual_card_zero_v1', 'true');
+    }
+
     let cardBal = parseFloat(localStorage.getItem(STORAGE_KEYS.CARD_BALANCE));
-    if (isNaN(cardBal)) cardBal = 14850.00;
+    if (isNaN(cardBal)) cardBal = 0.00;
 
     let outBal = parseFloat(localStorage.getItem(STORAGE_KEYS.OUTSTANDING_BALANCE));
     if (isNaN(outBal)) outBal = 14850.00;

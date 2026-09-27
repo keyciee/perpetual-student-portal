@@ -22,7 +22,7 @@ const DEMO_STUDENT_PROFILES = {
     status: "Regular / Dean's Lister",
     completedCredits: "78 / 144 Units",
     gpa: "3.78",
-    balance: "₱14,850.00",
+    balance: "₱0.00",
     totalAssessment: "₱24,500.00"
   },
   "2023-01104": {
@@ -38,7 +38,7 @@ const DEMO_STUDENT_PROFILES = {
     status: "Regular / President's Lister",
     completedCredits: "81 / 144 Units",
     gpa: "3.85",
-    balance: "₱11,200.00",
+    balance: "₱0.00",
     totalAssessment: "₱24,500.00"
   },
   "2023-01822": {
@@ -54,7 +54,7 @@ const DEMO_STUDENT_PROFILES = {
     status: "Regular / University Scholar",
     completedCredits: "84 / 144 Units",
     gpa: "3.90",
-    balance: "₱8,450.00",
+    balance: "₱0.00",
     totalAssessment: "₱24,500.00"
   },
   "2023-01550": {
@@ -70,7 +70,7 @@ const DEMO_STUDENT_PROFILES = {
     status: "Regular / Good Standing",
     completedCredits: "78 / 144 Units",
     gpa: "3.72",
-    balance: "₱16,300.00",
+    balance: "₱0.00",
     totalAssessment: "₱24,500.00"
   },
   "2023-01688": {
@@ -86,7 +86,7 @@ const DEMO_STUDENT_PROFILES = {
     status: "Regular / Good Standing",
     completedCredits: "76 / 144 Units",
     gpa: "3.75",
-    balance: "₱12,900.00",
+    balance: "₱0.00",
     totalAssessment: "₱24,500.00"
   }
 };
@@ -167,7 +167,7 @@ function authenticateUser(identifier, password, remember = false) {
       status: "Regular / Good Standing",
       completedCredits: "78 / 144 Units",
       gpa: "3.78",
-      balance: "₱14,850.00",
+      balance: "₱0.00",
       totalAssessment: "₱24,500.00"
     };
   }
