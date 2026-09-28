@@ -89,7 +89,6 @@
                 placeholder="Enter your student password" 
                 required 
                 autocomplete="current-password"
-                value="perpetual2026"
               >
               <button type="button" class="btn-toggle-eye" id="btn-toggle-password" title="Toggle password visibility">
                 <svg id="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -100,7 +99,7 @@
           <!-- Options Row -->
           <div class="login-options-row">
             <label class="remember-checkbox-label">
-              <input type="checkbox" id="remember-student" checked>
+              <input type="checkbox" id="remember-student">
               <span>Remember Student ID</span>
             </label>
             <a href="javascript:void(0)" class="forgot-link" id="btn-open-help">Forgot Password / Help</a>
@@ -130,7 +129,7 @@
       <div class="modal-body-content">
         <p>To access the University of Perpetual Help System DALTA Student Portal, use your official Student ID Number and password.</p>
         <ul style="margin: 12px 0 16px 20px; line-height: 1.6; font-size: 13px;">
-          <li><strong>Default Student Credentials:</strong> Student ID: <code>2023-01492</code> • Password: <code>perpetual2026</code></li>
+          <li><strong>Authentication:</strong> Enter your official Student ID and registered password to sign in.</li>
           <li><strong>Password Reset:</strong> Contact the University MIS Department or visit the Registrar's Office.</li>
           <li><strong>Campus Support:</strong> Inquiries may be directed to <code>support@perpetualdalta.edu.ph</code>.</li>
         </ul>
@@ -168,7 +167,7 @@
       if (savedId) {
         inputId.value = savedId;
       } else {
-        inputId.value = '2023-01492'; // Default sample ID
+        inputId.value = '';
       }
 
       // 2. Check query params for logout notification
@@ -231,7 +230,7 @@
               window.location.href = 'index.html';
             }, 650);
           } catch (err) {
-            showAlert('Authentication error. Please try again.');
+            showAlert(err.message || 'Authentication error. Please check your credentials.');
             submitBtn.disabled = false;
             submitText.textContent = 'Sign In to Student Portal →';
             submitSpinner.style.display = 'none';

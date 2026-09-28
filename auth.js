@@ -135,8 +135,13 @@ function clearPortalSession() {
 // Authenticate with ID/Email and Password
 function authenticateUser(identifier, password, remember = false) {
   const trimmed = identifier.trim();
-  
-  // Check exact ID match or email match in known profiles
+
+  // Validate student password strictly
+  if (!password || password.trim() !== "perpetual2026") {
+    throw new Error("Invalid password. Please enter your valid student password.");
+  }
+
+  // Check exact ID match or email match in registered student profiles
   let matched = null;
   for (const key in DEMO_STUDENT_PROFILES) {
     const profile = DEMO_STUDENT_PROFILES[key];
@@ -147,29 +152,9 @@ function authenticateUser(identifier, password, remember = false) {
     }
   }
 
-  // If not in demo list, dynamically construct a realistic student profile
+  // Reject unauthorized / unregistered logins
   if (!matched) {
-    const isEmail = trimmed.includes('@');
-    const studentId = isEmail ? "2023-" + Math.floor(10000 + Math.random() * 90000) : trimmed;
-    const namePart = isEmail ? trimmed.split('@')[0].replace('.', ' ') : "Student User";
-    const formattedName = namePart.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    
-    matched = {
-      studentId: studentId,
-      fullName: formattedName,
-      firstName: formattedName.split(' ')[0],
-      email: isEmail ? trimmed : `${studentId.toLowerCase()}@perpetual.edu.ph`,
-      major: "Information Technology",
-      majorShort: "BS IT",
-      program: "BS Information Technology",
-      yearLevel: "3rd Year (Junior)",
-      initials: getInitials(formattedName),
-      status: "Regular / Good Standing",
-      completedCredits: "78 / 144 Units",
-      gpa: "3.78",
-      balance: "₱0.00",
-      totalAssessment: "₱24,500.00"
-    };
+    throw new Error("Invalid Student ID or institutional email. Access denied.");
   }
 
   setPortalSession(matched, remember);
