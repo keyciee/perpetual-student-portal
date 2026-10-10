@@ -91,6 +91,29 @@ const DEMO_STUDENT_PROFILES = {
   }
 };
 
+const DEMO_ADMIN_PROFILES = {
+  "EMP-2026-001": {
+    adminId: "EMP-2026-001",
+    fullName: "Dr. Arcadio L. Tamayo",
+    firstName: "Arcadio",
+    email: "admin@perpetual.edu.ph",
+    role: "admin",
+    department: "Executive Office & Office of the Registrar",
+    designation: "University System Administrator & Academic Registrar",
+    initials: "AT"
+  },
+  "EMP-2026-CASH": {
+    adminId: "EMP-2026-CASH",
+    fullName: "Ma. Teresa Reyes, CPA",
+    firstName: "Teresa",
+    email: "treasury@perpetual.edu.ph",
+    role: "admin",
+    department: "Treasury & University Accounting Division",
+    designation: "Chief University Cashier & Comptroller",
+    initials: "TR"
+  }
+};
+
 const DEFAULT_PROFILE = DEMO_STUDENT_PROFILES["2023-01492"];
 
 // Helper: Get initials from name
@@ -132,55 +155,94 @@ function clearPortalSession() {
   localStorage.removeItem(AUTH_STORAGE_KEY);
 }
 
-// Authenticate with ID/Email and Password
-function authenticateUser(identifier, password, remember = false) {
-  const trimmed = identifier.trim();
+// Authenticate with ID/Email and Password (Supports Student & Admin)
+function authenticateUser(identifier, password, remember = false, targetRole = 'student') {
+  const trimmed = identifier.trim().toLowerCase();
+  const trimmedPass = (password || '').trim();
 
-  // Validate student password strictly
-  if (!password || password.trim() !== "perpetual2026") {
-    throw new Error("Invalid password. Please enter your valid student password.");
-  }
-
-  // Check exact ID match or email match in registered student profiles
-  let matched = null;
-  for (const key in DEMO_STUDENT_PROFILES) {
-    const profile = DEMO_STUDENT_PROFILES[key];
-    if (profile.studentId.toLowerCase() === trimmed.toLowerCase() ||
-        profile.email.toLowerCase() === trimmed.toLowerCase()) {
-      matched = profile;
+  // 1. Check for Admin Login
+  let adminMatch = null;
+  for (const key in DEMO_ADMIN_PROFILES) {
+    const prof = DEMO_ADMIN_PROFILES[key];
+    if (prof.adminId.toLowerCase() === trimmed || prof.email.toLowerCase() === trimmed) {
+      adminMatch = prof;
       break;
     }
   }
 
-  // Reject unauthorized / unregistered logins
-  if (!matched) {
+  if (targetRole === 'admin' || adminMatch) {
+    if (trimmedPass !== "admin2026" && trimmedPass !== "perpetual2026") {
+      throw new Error("Invalid password. Please enter your valid administrator / staff password.");
+    }
+    if (!adminMatch) {
+      if (trimmed === "admin" || trimmed.includes("admin")) {
+        adminMatch = DEMO_ADMIN_PROFILES["EMP-2026-001"];
+      } else if (trimmed.includes("cash") || trimmed.includes("treasury")) {
+        adminMatch = DEMO_ADMIN_PROFILES["EMP-2026-CASH"];
+      } else {
+        throw new Error("Invalid Employee ID or staff email. Access denied.");
+      }
+    }
+    setPortalSession(adminMatch, remember);
+    if (remember) {
+      localStorage.setItem(SAVED_ID_KEY, adminMatch.adminId);
+    }
+    return adminMatch;
+  }
+
+  // 2. Student Authentication
+  if (trimmedPass !== "perpetual2026" && trimmedPass !== "student2026") {
+    throw new Error("Invalid password. Please enter your valid student password.");
+  }
+
+  let studentMatch = null;
+  for (const key in DEMO_STUDENT_PROFILES) {
+    const profile = DEMO_STUDENT_PROFILES[key];
+    if (profile.studentId.toLowerCase() === trimmed ||
+        profile.email.toLowerCase() === trimmed) {
+      studentMatch = { ...profile, role: "student" };
+      break;
+    }
+  }
+
+  if (!studentMatch) {
     throw new Error("Invalid Student ID or institutional email. Access denied.");
   }
 
-  setPortalSession(matched, remember);
+  setPortalSession(studentMatch, remember);
 
   if (remember) {
-    localStorage.setItem(SAVED_ID_KEY, trimmed);
+    localStorage.setItem(SAVED_ID_KEY, studentMatch.studentId);
   } else {
     localStorage.removeItem(SAVED_ID_KEY);
   }
 
-  return matched;
+  return studentMatch;
 }
 
 // Check if user is logged in for protected pages
 function enforceRouteGuard() {
-  const isLoginPage = window.location.pathname.endsWith('login.html') || window.location.href.includes('login.html');
-  const isGuestMode = window.location.search.includes('guest=true');
+  const path = window.location.pathname.toLowerCase();
+  const href = window.location.href.toLowerCase();
+  const isLoginPage = path.endsWith('login.html') || href.includes('login.html');
+  const isGuestMode = href.includes('guest=true');
 
   if (isLoginPage) {
-    // If on login page and already logged in without logout flag, offer seamless redirect or stay
     return;
   }
 
   const session = getPortalSession();
   if (!session && !isGuestMode) {
     window.location.href = 'login.html';
+    return;
+  }
+
+  // Protect admin pages: only allow role === 'admin'
+  const isAdminPage = path.includes('admin-') || href.includes('admin-');
+  if (isAdminPage) {
+    if (!session || session.role !== 'admin') {
+      window.location.href = 'login.html?admin_required=true';
+    }
   }
 }
 
@@ -295,6 +357,38 @@ function hydratePortalUI() {
   });
 }
 
+// Hydrate Admin UI elements across admin pages
+function hydrateAdminUI() {
+  const session = getPortalSession();
+  if (!session || session.role !== 'admin') return;
+
+  document.querySelectorAll('.admin-profile-name, #admin-profile-name').forEach(el => {
+    el.textContent = session.fullName;
+  });
+
+  document.querySelectorAll('.admin-profile-title, #admin-profile-title').forEach(el => {
+    el.textContent = session.designation || "University Administrator";
+  });
+
+  document.querySelectorAll('.admin-profile-dept, #admin-profile-dept').forEach(el => {
+    el.textContent = session.department || "Office of Academic & Financial Administration";
+  });
+
+  document.querySelectorAll('.admin-profile-initials, #admin-profile-initials').forEach(el => {
+    el.textContent = session.initials || "AT";
+  });
+
+  document.querySelectorAll('#admin-logout-btn, .btn-admin-logout').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('Sign out of University Administration Console?')) {
+        clearPortalSession();
+        window.location.href = 'login.html?logout=true';
+      }
+    });
+  });
+}
+
 // Update profile changes from settings
 function updatePortalProfile(updatedFields) {
   const current = getPortalSession() || DEFAULT_PROFILE;
@@ -312,4 +406,5 @@ function updatePortalProfile(updatedFields) {
 document.addEventListener('DOMContentLoaded', () => {
   enforceRouteGuard();
   hydratePortalUI();
+  hydrateAdminUI();
 });

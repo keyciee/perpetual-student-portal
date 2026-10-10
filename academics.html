@@ -398,10 +398,11 @@
                     <th>Units</th>
                     <th>Instructor</th>
                     <th>Schedule</th>
-                    <th>Status</th>
+                    <th>Term Evaluation</th>
+                    <th>Clearance</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="acad-enrolled-body">
                   <tr>
                     <td style="font-weight: 700;">CS 401</td>
                     <td style="font-weight: 600;">Advanced Software Engineering</td>
@@ -752,8 +753,57 @@
         `;
         alert(`Successfully submitted "${filename}" for ${selectedCourse}!`);
       }
+
+      // Dynamic Academic Records & Live Grade Synchronization
+      function renderEnrolledSubjects() {
+        if (typeof PerpetualAcademicStore === 'undefined') return;
+        const session = typeof getPortalSession === 'function' ? getPortalSession() : null;
+        const studentId = session ? session.studentId : "2023-01492";
+        const student = PerpetualAcademicStore.getStudent(studentId);
+        if (!student) return;
+
+        // Update GPA & Status
+        const gpaEl = document.getElementById('acad-gpa');
+        if (gpaEl) gpaEl.textContent = `${student.gpa.toFixed(2)} / 4.00`;
+
+        const statusEl = document.getElementById('acad-status');
+        if (statusEl) {
+          if (student.clearance && student.clearance !== 'CLEARED') {
+            statusEl.textContent = student.clearance;
+            statusEl.style.color = 'var(--danger)';
+          } else {
+            statusEl.textContent = student.status;
+            statusEl.style.color = 'var(--success)';
+          }
+        }
+
+        const tbody = document.getElementById('acad-enrolled-body');
+        if (tbody && student.courses) {
+          tbody.innerHTML = '';
+          student.courses.forEach(c => {
+            const tr = document.createElement('tr');
+            const avg = ((c.prelim + c.midterm + c.finals) / 3).toFixed(2);
+            tr.innerHTML = `
+              <td style="font-weight: 700;">${c.code}</td>
+              <td style="font-weight: 600;">${c.title}</td>
+              <td>${c.units.toFixed(1)}</td>
+              <td>${c.instructor}</td>
+              <td>${c.schedule}</td>
+              <td style="font-weight: 700; color: var(--primary);">${avg} (${c.remarks})</td>
+              <td><span class="status-pill status-enrolled">${student.clearance === 'CLEARED' ? 'Enrolled' : student.clearance}</span></td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      }
+
+      renderEnrolledSubjects();
+      window.addEventListener('storage', renderEnrolledSubjects);
+      window.addEventListener('perpetualAcademicChanged', renderEnrolledSubjects);
+      window.addEventListener('focus', renderEnrolledSubjects);
     });
   </script>
+  <script src="academic-store.js"></script>
   <script src="auth.js"></script>
 </body>
 </html>

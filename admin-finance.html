@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse Administration Portal - Treasury & Cashier</title>
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- --- Left Sidebar Navigation --- -->
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="uphsd-logo.png" alt="UPHSD Seal" class="sidebar-logo-img">
+        <div class="logo-text-group">
+          <span class="logo-text">University of Perpetual Help</span>
+          <span class="logo-subtext">System DALTA • Administration</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <li class="nav-item">
+          <a href="admin-dashboard.html">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Executive Overview
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="admin-students.html">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Student Records & Grades
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="admin-finance.html">
+            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            Treasury & Cashier
+          </a>
+        </li>
+        <li class="nav-item" style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+          <a href="index.html" style="color: var(--primary); font-weight: 600;">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            Student Experience View
+          </a>
+        </li>
+      </nav>
+
+      <!-- Admin Profile Box in Sidebar -->
+      <div class="user-profile-summary">
+        <div class="user-profile-row">
+          <svg class="profile-avatar" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="adminAvatarGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FEF3C7" />
+                <stop offset="100%" stop-color="#FDE68A" />
+              </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="48" fill="url(#adminAvatarGrad3)" />
+            <text class="admin-profile-initials" x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="800" font-size="34" fill="#7A0C2E">TR</text>
+          </svg>
+          <div class="profile-info">
+            <span class="profile-name admin-profile-name">Ma. Teresa Reyes, CPA</span>
+            <span class="profile-role admin-profile-title">Chief University Cashier</span>
+          </div>
+        </div>
+        <button class="btn-sidebar-logout btn-admin-logout" id="admin-logout-btn" title="Sign out of administration console">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- --- Main Workspace Area --- -->
+    <main class="main-workspace">
+      
+      <!-- --- Header --- -->
+      <header class="workspace-header">
+        <div class="welcome-msg">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+            <span class="admin-badge">Treasury & Accounting Division</span>
+            <span class="cloud-status-badge"><span class="pulsing-dot"></span> Firestore Synced</span>
+          </div>
+          <h1>University Cashier & Collections Terminal</h1>
+          <p>Real-time payment audit, official receipt generation, and on-campus over-the-counter settlement processing.</p>
+        </div>
+        <div class="header-actions">
+          <div class="date-badge">
+            <span id="finance-header-date">Wednesday, Jul 29, 2026</span>
+          </div>
+          <button class="btn btn-secondary" onclick="window.print()" style="padding: 7px 12px; font-size: 12px; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print Daily Cashier Audit
+          </button>
+        </div>
+      </header>
+
+      <!-- --- Treasury KPIs --- -->
+      <div class="admin-metrics-grid">
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-title">Cleared Collections</span>
+            <div class="metric-icon-box maroon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            </div>
+          </div>
+          <div class="metric-value" id="tf-cleared-collections">₱9,650.00</div>
+          <div class="metric-subtext positive">Total Paid Settlements</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-title">Student Card Deposits</span>
+            <div class="metric-icon-box green">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+          </div>
+          <div class="metric-value" id="tf-card-deposits">₱0.00</div>
+          <div class="metric-subtext">Perpetual Dalta Card Balance</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-title">Assessment Receivables</span>
+            <div class="metric-icon-box gold">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+          </div>
+          <div class="metric-value" id="tf-receivables">₱14,850.00</div>
+          <div class="metric-subtext">Remaining Balance</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-title">Total Term Assessment</span>
+            <div class="metric-icon-box navy">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            </div>
+          </div>
+          <div class="metric-value">₱24,500.00</div>
+          <div class="metric-subtext">18 Units Assessment</div>
+        </div>
+      </div>
+
+      <!-- --- Main Content Grid --- -->
+      <div class="dashboard-grid">
+        
+        <!-- Over the counter Cashier Entry Terminal (Col 4) -->
+        <section class="portal-card col-4">
+          <div class="card-header-row" style="margin-bottom: 14px;">
+            <div>
+              <h3 class="card-title-main">Cashier Terminal (POS)</h3>
+              <div style="font-size: 11px; color: var(--text-muted);">Process on-campus over-the-counter payments.</div>
+            </div>
+          </div>
+
+          <form id="cashier-entry-form" style="display: flex; flex-direction: column; gap: 14px;">
+            
+            <!-- Student Selection -->
+            <div>
+              <label class="form-label" for="cashier-student-select">Student Account</label>
+              <select id="cashier-student-select" class="form-input" style="width: 100%; font-weight: 600;">
+                <option value="2023-01492">Juan Dela Cruz (2023-01492) - BS IT</option>
+                <option value="2023-01104">Gabriel M. Dela Cruz (2023-01104) - BS IT</option>
+                <option value="2023-01822">Samantha Nicole Santos (2023-01822) - BS IT</option>
+                <option value="2023-01550">Christian Dale Mendoza (2023-01550) - BS IT</option>
+                <option value="2023-01688">Marc Dominic Ramos (2023-01688) - BS IT</option>
+              </select>
+            </div>
+
+            <!-- Transaction Type -->
+            <div>
+              <label class="form-label">Transaction Category</label>
+              <div style="display: flex; gap: 8px; margin-top: 4px;">
+                <label style="flex: 1; display: flex; align-items: center; gap: 6px; font-size: 12px; background: #F8FAFC; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;">
+                  <input type="radio" name="cashier-type" value="tuition" checked>
+                  <span style="font-weight: 600;">Tuition Fee</span>
+                </label>
+                <label style="flex: 1; display: flex; align-items: center; gap: 6px; font-size: 12px; background: #F8FAFC; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;">
+                  <input type="radio" name="cashier-type" value="card">
+                  <span style="font-weight: 600;">Card Cash-In</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Amount Input & Quick Chips -->
+            <div>
+              <label class="form-label" for="cashier-amount-input">Payment Amount (₱)</label>
+              <input type="number" id="cashier-amount-input" class="form-input" placeholder="e.g. 5000.00" min="100" step="50" style="width: 100%; font-size: 15px; font-weight: 700; color: var(--primary);" value="2500" required>
+              <div style="display: flex; gap: 6px; margin-top: 6px;">
+                <button type="button" class="btn btn-secondary amount-chip" data-amt="1000" style="padding: 2px 8px; font-size: 11px;">+₱1,000</button>
+                <button type="button" class="btn btn-secondary amount-chip" data-amt="2500" style="padding: 2px 8px; font-size: 11px;">+₱2,500</button>
+                <button type="button" class="btn btn-secondary amount-chip" data-amt="5000" style="padding: 2px 8px; font-size: 11px;">+₱5,000</button>
+              </div>
+            </div>
+
+            <!-- Payment Tender Channel -->
+            <div>
+              <label class="form-label" for="cashier-channel-select">Tender Channel</label>
+              <select id="cashier-channel-select" class="form-input" style="width: 100%;">
+                <option value="Cashier Window (Cash)">Cash (On-Campus Cashier Counter)</option>
+                <option value="University POS (Debit/Credit Card)">POS Debit / Credit Card Terminal</option>
+                <option value="Bank Check / Manager's Check">Manager's Check (BDO / BPI)</option>
+                <option value="GCash">GCash Counter Verification</option>
+                <option value="Maya">Maya Counter Verification</option>
+              </select>
+            </div>
+
+            <!-- Particulars / Notes -->
+            <div>
+              <label class="form-label" for="cashier-notes-input">Particulars / Remarks</label>
+              <input type="text" id="cashier-notes-input" class="form-input" style="width: 100%; font-size: 12px;" value="On-Campus Midterm Clearance Settlement">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary" id="btn-process-cashier" style="margin-top: 8px; justify-content: center; padding: 12px; font-size: 13px; font-weight: 700; gap: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Process & Issue Official Receipt
+            </button>
+          </form>
+        </section>
+
+        <!-- Master Treasury Ledger Table (Col 8) -->
+        <section class="portal-card col-8">
+          <div class="card-header-row" style="margin-bottom: 14px;">
+            <div>
+              <h3 class="card-title-main">Treasury Master Ledger</h3>
+              <div style="font-size: 11px; color: var(--text-muted);">Real-time log of all debit assessments and credit collections.</div>
+            </div>
+            
+            <div style="display: flex; gap: 8px;">
+              <select id="ledger-filter-select" class="form-input" style="font-size: 11px; padding: 5px 8px;">
+                <option value="all">All Transactions</option>
+                <option value="credit">Credit Payments Only</option>
+                <option value="debit">Debit Assessments Only</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ledger-table-container">
+            <table class="ledger-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Reference OR / Bill</th>
+                  <th>Particulars</th>
+                  <th style="text-align: right;">Debit (Billed)</th>
+                  <th style="text-align: right;">Credit (Paid)</th>
+                  <th style="text-align: right;">Running Bal</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="treasury-master-ledger-body">
+                <!-- Populated dynamically from PerpetualFinanceStore -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Soft Copy Official Receipt Modal -->
+  <div class="modal-backdrop" id="admin-receipt-modal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(5px); z-index: 999; display: none; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #FFFFFF; border-radius: 12px; max-width: 620px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <img src="uphsd-logo.png" style="width: 46px; height: auto;" alt="Seal">
+          <div>
+            <h4 style="font-size: 15px; margin: 0; color: var(--primary);">UNIVERSITY OF PERPETUAL HELP SYSTEM DALTA</h4>
+            <div style="font-size: 11px; color: var(--text-muted);">MOLINO CAMPUS • OFFICIAL TREASURY RECEIPT</div>
+          </div>
+        </div>
+        <button id="btn-close-finance-receipt" style="background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted);">&times;</button>
+      </div>
+
+      <div id="finance-receipt-content" style="font-size: 13px; line-height: 1.6;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; background: #F8FAFC; padding: 12px; border-radius: 6px;">
+          <div><span style="color: var(--text-muted);">OR Number:</span> <strong id="m-rcpt-or" style="font-family: monospace; color: var(--primary);">—</strong></div>
+          <div><span style="color: var(--text-muted);">Date & Time:</span> <span id="m-rcpt-datetime">—</span></div>
+          <div><span style="color: var(--text-muted);">Student Account:</span> <strong>Juan Dela Cruz (2023-01492)</strong></div>
+          <div><span style="color: var(--text-muted);">Channel:</span> <span id="m-rcpt-channel">—</span></div>
+        </div>
+
+        <div style="border-top: 1px dashed var(--border-color); border-bottom: 1px dashed var(--border-color); padding: 14px 0; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span id="m-rcpt-title" style="font-weight: 700; font-size: 14px;">Tuition Settlement</span>
+            <span id="m-rcpt-amount" style="font-weight: 800; color: var(--primary); font-size: 18px;">₱0.00</span>
+          </div>
+          <div id="m-rcpt-particulars" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">—</div>
+          <div style="font-size: 11px; color: var(--text-medium); margin-top: 6px;"><strong>Amount in Words:</strong> <span id="m-rcpt-words">—</span></div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+          <div>
+            <div style="font-size: 11px; color: var(--success); font-weight: 700;">★ VERIFIED TREASURY CASHIER RECORD ★</div>
+            <div style="font-size: 10px; color: var(--text-muted);">Electronic Certificate: CERT-UPHSD-01 • Ma. Teresa Reyes, CPA</div>
+          </div>
+          <button class="btn btn-primary" onclick="window.print()" style="font-size: 12px; padding: 8px 16px;">Print Official Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification -->
+  <div class="admin-toast" id="admin-toast">
+    <svg class="admin-toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    <span id="toast-message">Transaction processed successfully!</span>
+  </div>
+
+  <!-- Google Firebase Cloud Database SDK & Sync Bridge -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-bridge.js"></script>
+  <script src="finance-store.js"></script>
+  <script src="academic-store.js"></script>
+  <script src="auth.js"></script>
+
+  <!-- Treasury Controller Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Header Date
+      const dateEl = document.getElementById('finance-header-date');
+      if (dateEl) {
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+        dateEl.textContent = today.toLocaleDateString('en-US', options);
+      }
+
+      const toastEl = document.getElementById('admin-toast');
+      const toastMsg = document.getElementById('toast-message');
+
+      function showToast(msg) {
+        toastMsg.textContent = msg;
+        toastEl.classList.add('show');
+        setTimeout(() => {
+          toastEl.classList.remove('show');
+        }, 3200);
+      }
+
+      // Quick Amount Chips
+      document.querySelectorAll('.amount-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.getElementById('cashier-amount-input').value = chip.getAttribute('data-amt');
+        });
+      });
+
+      // Render Treasury KPIs & Ledger Table
+      function renderTreasury() {
+        if (typeof PerpetualFinanceStore === 'undefined') return;
+        const finance = PerpetualFinanceStore.getFinanceState();
+
+        document.getElementById('tf-cleared-collections').textContent = `₱${finance.totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById('tf-card-deposits').textContent = `₱${finance.cardBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById('tf-receivables').textContent = `₱${finance.outstandingBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        const tbody = document.getElementById('treasury-master-ledger-body');
+        const filterVal = document.getElementById('ledger-filter-select')?.value || 'all';
+
+        tbody.innerHTML = '';
+        const txs = [...finance.transactions].reverse();
+
+        txs.forEach(tx => {
+          if (filterVal === 'credit' && !tx.credit) return;
+          if (filterVal === 'debit' && !tx.debit) return;
+
+          const tr = document.createElement('tr');
+          const debitStr = tx.debit ? `₱${parseFloat(tx.debit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
+          const creditStr = tx.credit ? `₱${parseFloat(tx.credit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
+          const balanceStr = `₱${parseFloat(tx.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+          tr.innerHTML = `
+            <td>${tx.date}</td>
+            <td style="font-family: monospace; font-weight: 700; color: var(--primary);">${tx.ref}</td>
+            <td>${tx.particulars}</td>
+            <td style="text-align: right; font-weight: ${tx.debit ? '600' : '400'}; color: ${tx.debit ? 'var(--text-main)' : 'var(--text-muted)'};">${debitStr}</td>
+            <td style="text-align: right; font-weight: 700; color: ${tx.credit ? 'var(--success)' : 'var(--text-muted)'};">${creditStr}</td>
+            <td style="text-align: right; font-weight: 700; color: var(--primary);">${balanceStr}</td>
+            <td style="text-align: center;">
+              <button class="btn btn-secondary btn-view-rcpt" data-ref="${tx.ref}" style="padding: 3px 8px; font-size: 11px;">View OR</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Bind View OR buttons
+        tbody.querySelectorAll('.btn-view-rcpt').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const ref = btn.getAttribute('data-ref');
+            showReceiptModal(ref, finance);
+          });
+        });
+      }
+
+      // Receipt Modal
+      const modal = document.getElementById('admin-receipt-modal');
+      const closeBtn = document.getElementById('btn-close-finance-receipt');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+
+      function showReceiptModal(ref, finance) {
+        const rcpt = finance.receipts[ref];
+        if (!rcpt) return;
+        document.getElementById('m-rcpt-or').textContent = rcpt.orNumber;
+        document.getElementById('m-rcpt-datetime').textContent = `${rcpt.date} • ${rcpt.time}`;
+        document.getElementById('m-rcpt-channel').textContent = rcpt.channel;
+        document.getElementById('m-rcpt-title').textContent = rcpt.title;
+        document.getElementById('m-rcpt-particulars').textContent = rcpt.particulars;
+        document.getElementById('m-rcpt-amount').textContent = `₱${parseFloat(rcpt.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById('m-rcpt-words').textContent = rcpt.amountWords || '';
+        modal.style.display = 'flex';
+      }
+
+      // Form submission for over-the-counter payments
+      const form = document.getElementById('cashier-entry-form');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const amt = parseFloat(document.getElementById('cashier-amount-input').value);
+        if (isNaN(amt) || amt <= 0) {
+          alert('Please enter a valid payment amount.');
+          return;
+        }
+
+        const type = document.querySelector('input[name="cashier-type"]:checked').value;
+        const channel = document.getElementById('cashier-channel-select').value;
+        const notes = document.getElementById('cashier-notes-input').value;
+
+        let result;
+        if (type === 'tuition') {
+          result = PerpetualFinanceStore.recordTuitionPayment(amt, channel, notes || 'Over-the-Counter Tuition Settlement');
+        } else {
+          result = PerpetualFinanceStore.recordCashIn(amt, channel, 'OVER-THE-COUNTER');
+        }
+
+        renderTreasury();
+        showToast(`✅ Official Receipt ${result.orNumber} generated and posted to treasury ledger!`);
+
+        // Automatically show the generated Official Receipt
+        setTimeout(() => {
+          showReceiptModal(result.orNumber, PerpetualFinanceStore.getFinanceState());
+        }, 400);
+      });
+
+      // Filter change
+      document.getElementById('ledger-filter-select')?.addEventListener('change', renderTreasury);
+
+      renderTreasury();
+
+      // Listen for updates from other tabs
+      window.addEventListener('storage', renderTreasury);
+      window.addEventListener('perpetualFinanceChanged', renderTreasury);
+      window.addEventListener('focus', renderTreasury);
+    });
+  </script>
+</body>
+</html>

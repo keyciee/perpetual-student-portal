@@ -47,10 +47,36 @@
          ========================================== -->
     <main class="login-form-panel">
       <div class="login-card-box">
-        <h1>Student Portal Login</h1>
-        <p class="login-subtext">
+
+        <!-- Portal Role Selector Tabs -->
+        <div class="login-role-tabs" style="display: flex; gap: 8px; margin-bottom: 22px; background: #F1F5F9; padding: 4px; border-radius: var(--radius-md);">
+          <button type="button" class="login-role-tab active" id="tab-role-student" style="flex: 1; padding: 9px 12px; font-size: 13px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; background: #FFFFFF; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+            Student Portal
+          </button>
+          <button type="button" class="login-role-tab" id="tab-role-admin" style="flex: 1; padding: 9px 12px; font-size: 13px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; background: transparent; color: var(--text-medium);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            Admin & Staff
+          </button>
+        </div>
+
+        <h1 id="login-title">Student Portal Login</h1>
+        <p class="login-subtext" id="login-subtext">
           Sign in with your Student ID or institutional email to access your personal academic records and financial balance.
         </p>
+
+        <!-- Quick Demo Account Chips -->
+        <div class="demo-chips-container" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;">Quick Demo Accounts:</div>
+          <div id="demo-student-chips" style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <button type="button" class="demo-chip-btn" data-id="2023-01492" data-pass="perpetual2026" style="padding: 4px 10px; font-size: 11px; background: #FFF5F7; border: 1px solid #FFE4E8; border-radius: 14px; color: var(--primary); font-weight: 600; cursor: pointer;">Juan Dela Cruz (Student)</button>
+            <button type="button" class="demo-chip-btn" data-id="2023-01104" data-pass="perpetual2026" style="padding: 4px 10px; font-size: 11px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; color: var(--text-medium); font-weight: 500; cursor: pointer;">Gabriel Dela Cruz</button>
+          </div>
+          <div id="demo-admin-chips" style="display: none; flex-wrap: wrap; gap: 6px;">
+            <button type="button" class="demo-chip-btn" data-id="EMP-2026-001" data-pass="admin2026" style="padding: 4px 10px; font-size: 11px; background: #FFF5F7; border: 1px solid #FFE4E8; border-radius: 14px; color: var(--primary); font-weight: 600; cursor: pointer;">Dr. Tamayo (Executive Admin)</button>
+            <button type="button" class="demo-chip-btn" data-id="EMP-2026-CASH" data-pass="admin2026" style="padding: 4px 10px; font-size: 11px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; color: var(--text-medium); font-weight: 500; cursor: pointer;">Ma. Teresa Reyes (Chief Cashier)</button>
+          </div>
+        </div>
 
         <!-- Status / Alert Message Box -->
         <div class="login-alert" id="login-alert">
@@ -63,7 +89,7 @@
           
           <!-- Student ID / Email Field -->
           <div class="login-input-group">
-            <label for="login-identifier">Student ID / Institutional Email</label>
+            <label for="login-identifier" id="login-identifier-label">Student ID / Institutional Email</label>
             <div class="login-input-wrapper">
               <span class="input-icon-left">
                 <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -222,18 +248,83 @@
       const openHelpBtn = document.getElementById('btn-open-help');
       const closeHelpBtn = document.getElementById('btn-close-help');
       const dismissModalBtn = document.getElementById('btn-modal-dismiss');
-      // 1. Check for stored saved ID
-      const savedId = localStorage.getItem('perpetual_saved_student_id');
-      if (savedId) {
-        inputId.value = savedId;
-      } else {
-        inputId.value = '';
+      // Role state tracking
+      let currentRole = 'student';
+      const tabStudent = document.getElementById('tab-role-student');
+      const tabAdmin = document.getElementById('tab-role-admin');
+      const loginTitle = document.getElementById('login-title');
+      const loginSubtext = document.getElementById('login-subtext');
+      const inputLabel = document.getElementById('login-identifier-label');
+      const studentChips = document.getElementById('demo-student-chips');
+      const adminChips = document.getElementById('demo-admin-chips');
+
+      function setRole(role) {
+        currentRole = role;
+        hideAlert();
+        if (role === 'admin') {
+          tabAdmin.style.background = '#FFFFFF';
+          tabAdmin.style.color = 'var(--primary)';
+          tabAdmin.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+          tabStudent.style.background = 'transparent';
+          tabStudent.style.color = 'var(--text-medium)';
+          tabStudent.style.boxShadow = 'none';
+
+          loginTitle.textContent = 'Administrative Console Login';
+          loginSubtext.textContent = 'Sign in with your University Employee ID or authorized staff credentials (Registrar, Treasury, Executive Administration).';
+          inputLabel.textContent = 'Employee ID / Staff Institutional Email';
+          inputId.placeholder = 'e.g. EMP-2026-001 or admin@perpetual.edu.ph';
+          submitText.textContent = 'Sign In to Administration Console →';
+
+          studentChips.style.display = 'none';
+          adminChips.style.display = 'flex';
+          inputId.value = '';
+          inputPassword.value = '';
+        } else {
+          tabStudent.style.background = '#FFFFFF';
+          tabStudent.style.color = 'var(--primary)';
+          tabStudent.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
+          tabAdmin.style.background = 'transparent';
+          tabAdmin.style.color = 'var(--text-medium)';
+          tabAdmin.style.boxShadow = 'none';
+
+          loginTitle.textContent = 'Student Portal Login';
+          loginSubtext.textContent = 'Sign in with your Student ID or institutional email to access your personal academic records and financial balance.';
+          inputLabel.textContent = 'Student ID / Institutional Email';
+          inputId.placeholder = 'e.g. 2023-01492 or student@perpetual.edu.ph';
+          submitText.textContent = 'Sign In to Student Portal →';
+
+          studentChips.style.display = 'flex';
+          adminChips.style.display = 'none';
+          inputId.value = '';
+          inputPassword.value = '';
+        }
       }
 
-      // 2. Check query params for logout notification
+      tabStudent.addEventListener('click', () => setRole('student'));
+      tabAdmin.addEventListener('click', () => setRole('admin'));
+
+      // Demo Chip Click handlers
+      document.querySelectorAll('.demo-chip-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          inputId.value = btn.getAttribute('data-id');
+          inputPassword.value = btn.getAttribute('data-pass');
+          hideAlert();
+        });
+      });
+
+      // 1. Check for stored saved ID
+      const savedId = localStorage.getItem('perpetual_saved_student_id');
+      if (savedId && !savedId.startsWith('EMP')) {
+        inputId.value = savedId;
+      }
+
+      // 2. Check query params for logout or admin required notifications
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('logout') === 'true') {
         showAlert('You have been successfully signed out.', 'info');
+      } else if (urlParams.get('admin_required') === 'true') {
+        setRole('admin');
+        showAlert('Administrative authentication required to access Staff Console.', 'error');
       }
 
       // 3. Password Show/Hide Toggle
@@ -264,7 +355,7 @@
         const passVal = inputPassword.value.trim();
 
         if (!idVal) {
-          showAlert('Please enter your Student ID or institutional email.');
+          showAlert(currentRole === 'admin' ? 'Please enter your Employee ID or staff email.' : 'Please enter your Student ID or institutional email.');
           inputId.focus();
           return;
         }
@@ -277,25 +368,28 @@
 
         // Show loading state
         submitBtn.disabled = true;
-        submitText.textContent = 'Authenticating...';
+        submitText.textContent = 'Authenticating credentials...';
         submitSpinner.style.display = 'block';
 
-        // Simulate smooth authenticating delay
         setTimeout(() => {
           try {
-            const user = authenticateUser(idVal, passVal, rememberCheckbox.checked);
-            showAlert(`Welcome, ${user.fullName}! Redirecting to dashboard...`, 'success');
+            const user = authenticateUser(idVal, passVal, rememberCheckbox.checked, currentRole);
+            showAlert(`Welcome, ${user.fullName}! Redirecting to console...`, 'success');
             
             setTimeout(() => {
-              window.location.href = 'index.html';
+              if (user.role === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+              } else {
+                window.location.href = 'index.html';
+              }
             }, 650);
           } catch (err) {
             showAlert(err.message || 'Authentication error. Please check your credentials.');
             submitBtn.disabled = false;
-            submitText.textContent = 'Sign In to Student Portal →';
+            submitText.textContent = currentRole === 'admin' ? 'Sign In to Administration Console →' : 'Sign In to Student Portal →';
             submitSpinner.style.display = 'none';
           }
-        }, 600);
+        }, 500);
       });
 
       // 7. Help Modal Controls

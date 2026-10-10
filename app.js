@@ -106,4 +106,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // --- 5. Dynamic Academic Records & GPA Synchronization ---
+  function updateDashboardAcademic() {
+    if (typeof PerpetualAcademicStore === 'undefined' || typeof PerpetualAcademicStore.getStudent !== 'function') return;
+    const session = typeof getPortalSession === 'function' ? getPortalSession() : null;
+    const studentId = session ? session.studentId : "2023-01492";
+    const student = PerpetualAcademicStore.getStudent(studentId);
+    if (!student) return;
+
+    const gpaEl = document.querySelector('.gpa-value');
+    if (gpaEl && typeof student.gpa === 'number') {
+      gpaEl.textContent = student.gpa.toFixed(2);
+    }
+  }
+
+  updateDashboardAcademic();
+  window.addEventListener('storage', updateDashboardAcademic);
+  window.addEventListener('perpetualAcademicChanged', updateDashboardAcademic);
+
 });
