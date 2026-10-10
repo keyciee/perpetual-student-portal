@@ -944,30 +944,30 @@ body {
   margin-bottom: 28px;
 }
 
-/* Institutional Brand Seal on Red Panel */
-.brand-seal-showcase {
-  position: relative;
-  z-index: 2;
+/* Institutional Background Watermark Seal on Red Panel */
+.brand-watermark-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 440px;
+  height: 440px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: auto 0;
-  padding: 30px 0;
-  text-align: center;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.12;
+  filter: grayscale(25%) contrast(1.1) brightness(1.25);
+  user-select: none;
 }
 
-.brand-seal-img {
-  width: 175px;
+.brand-watermark-seal img {
+  width: 100%;
   height: auto;
   max-width: 100%;
-  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.45));
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
-}
-
-.brand-seal-img:hover {
-  transform: translateY(-4px) scale(1.03);
-  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.55));
+  max-height: 100%;
+  object-fit: contain;
 }
 
 /* Feature Showcase Cards (Computer Graphics & UI Modules) */
