@@ -343,9 +343,27 @@
     }
   }
 
+  function resetFinanceState() {
+    for (const key in STORAGE_KEYS) {
+      localStorage.removeItem(STORAGE_KEYS[key]);
+      sessionStorage.removeItem(STORAGE_KEYS[key]);
+    }
+    const cleanState = {
+      cardBalance: 0.00,
+      outstandingBalance: 14850.00,
+      totalPaid: 9650.00,
+      totalAssessment: 24500.00,
+      receipts: JSON.parse(JSON.stringify(DEFAULT_RECEIPTS)),
+      transactions: JSON.parse(JSON.stringify(DEFAULT_TRANSACTIONS))
+    };
+    saveFinanceState(cleanState);
+    return cleanState;
+  }
+
   window.PerpetualFinanceStore = {
     getFinanceState,
     saveFinanceState,
+    resetFinanceState,
     recordCashIn,
     recordTuitionPayment,
     amountToWords,

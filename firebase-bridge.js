@@ -122,6 +122,51 @@
     }
   }
 
+  // Factory reset / purge all test records from Cloud Firestore
+  async function purgeCloudDemoData(studentId = "2023-01492") {
+    if (!db || !isConnected) {
+      console.log("ℹ️ [Firebase] Offline or not configured, skipping cloud purge.");
+      return true;
+    }
+    try {
+      console.log(`🧹 [Firebase] Purging test cloud data for ${studentId}...`);
+
+      // 1. Delete transactions for this student
+      const txSnap = await db.collection("transactions").where("studentId", "==", studentId).get();
+      const batch = db.batch();
+      txSnap.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+
+      // 2. Delete test receipts for this student
+      const rcptSnap = await db.collection("receipts").where("studentId", "==", studentId).get();
+      rcptSnap.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+
+      // 3. Reset student profile document in Firestore
+      const studentDocRef = db.collection("students").doc(studentId);
+      batch.set(studentDocRef, {
+        studentId: studentId,
+        fullName: "Juan Dela Cruz",
+        cardBalance: 0,
+        outstandingBalance: 14850,
+        totalPaid: 9650,
+        totalAssessment: 24500,
+        status: "Regular / Dean's Lister",
+        program: "BS Information Technology",
+        resetAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      await batch.commit();
+      console.log("✅ [Firebase Cloud DB] Firestore database successfully purged back to clean state.");
+      return true;
+    } catch (err) {
+      console.error("❌ [Firebase] Error purging cloud records:", err);
+      return false;
+    }
+  }
+
   // Auto-initialize on load
   document.addEventListener('DOMContentLoaded', () => {
     initFirebase();
@@ -133,7 +178,8 @@
     isReady: () => isConnected,
     syncCashIn,
     syncTuitionPayment,
-    pullStudentCloudData
+    pullStudentCloudData,
+    purgeCloudDemoData
   };
 
 })(window);
