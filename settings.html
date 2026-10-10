@@ -293,24 +293,6 @@
           <button class="btn btn-secondary" onclick="alert('Preferences saved successfully!')" style="width:100%; justify-content:center; margin-top:20px;">
             Save Preferences
           </button>
-
-          <!-- Danger / Demo Management Zone -->
-          <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-color);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #DC2626; letter-spacing: 0.5px;">Presentation & Demo Control</span>
-              <span style="font-size: 10px; background: #FEE2E2; color: #DC2626; padding: 2px 8px; border-radius: 12px; font-weight: 600;">Cloud & Local</span>
-            </div>
-            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">
-              Purges all test cash-in deposits, tuition settlements, and cloud database records. Restores Juan Dela Cruz's finance ledger and card balance (₱0.00) back to untouched day-one defaults.
-            </p>
-            <button type="button" id="btn-purge-demo-data" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #DC2626; background: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                <path d="M3 3v5h5"></path>
-              </svg>
-              <span id="btn-purge-text">Factory Reset Demo Data (Local & Cloud DB)</span>
-            </button>
-          </div>
         </section>
 
       </div>
@@ -350,53 +332,6 @@
 
         alert('Profile details updated and synced across all portal modules!');
       });
-
-      // 2. Demo Data Factory Reset (Cloud & Local)
-      const btnPurge = document.getElementById('btn-purge-demo-data');
-      const btnPurgeText = document.getElementById('btn-purge-text');
-
-      if (btnPurge) {
-        btnPurge.addEventListener('click', async () => {
-          const confirmed = confirm(
-            "⚠️ FACTORY RESET DEMO DATA?\n\n" +
-            "This will permanently:\n" +
-            "1. Refund all test tuition payments back to the original balance (₱14,850.00).\n" +
-            "2. Reset Perpetual Card balance back to exactly ₱0.00.\n" +
-            "3. Delete test receipts and ledger rows.\n" +
-            "4. Purge all test documents in your Google Cloud Firestore database.\n\n" +
-            "Proceed with clean reset?"
-          );
-
-          if (!confirmed) return;
-
-          btnPurge.disabled = true;
-          btnPurge.style.opacity = '0.6';
-          btnPurgeText.textContent = 'Purging Local & Cloud Records...';
-
-          try {
-            // 1. Purge Cloud Firestore records if online
-            if (window.PerpetualFirebaseBridge && typeof window.PerpetualFirebaseBridge.purgeCloudDemoData === 'function') {
-              await window.PerpetualFirebaseBridge.purgeCloudDemoData('2023-01492');
-            }
-
-            // 2. Reset Local Finance Store
-            if (window.PerpetualFinanceStore && typeof window.PerpetualFinanceStore.resetFinanceState === 'function') {
-              window.PerpetualFinanceStore.resetFinanceState();
-            } else {
-              localStorage.clear();
-              sessionStorage.clear();
-            }
-
-            alert("✅ Reset Complete!\n\nAll test transactions have been purged from both Local Cache and Google Cloud Firestore. Juan Dela Cruz's finance ledger is now 100% untouched and clean for your presentation.");
-            window.location.reload();
-          } catch (err) {
-            console.error("Purge error:", err);
-            if (window.PerpetualFinanceStore) window.PerpetualFinanceStore.resetFinanceState();
-            alert("✅ Local data reset complete! (Cloud sync will update when reconnected).");
-            window.location.reload();
-          }
-        });
-      }
     });
   </script>
 </body>
