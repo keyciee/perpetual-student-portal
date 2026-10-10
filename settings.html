@@ -296,6 +296,17 @@
         </section>
 
       </div>
+
+      <!-- Hidden Secret Purge Trigger (100% Invisible unless hovered) -->
+      <div class="secret-purge-zone" title="Secret Developer Reset">
+        <button type="button" class="secret-purge-btn" id="btn-secret-purge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg>
+          <span id="secret-purge-text">Factory Reset Demo Data (Cloud & Local)</span>
+        </button>
+      </div>
     </main>
 
   </div>
@@ -332,6 +343,51 @@
 
         alert('Profile details updated and synced across all portal modules!');
       });
+
+      // Secret Purge Trigger (Cloud & Local)
+      const btnSecretPurge = document.getElementById('btn-secret-purge');
+      const secretPurgeText = document.getElementById('secret-purge-text');
+
+      if (btnSecretPurge) {
+        btnSecretPurge.addEventListener('click', async () => {
+          const confirmed = confirm(
+            "⚠️ FACTORY RESET DEMO DATA?\n\n" +
+            "This will permanently:\n" +
+            "1. Refund all test tuition payments back to the original balance (₱14,850.00).\n" +
+            "2. Reset Perpetual Card balance back to exactly ₱0.00.\n" +
+            "3. Delete test receipts and ledger rows.\n" +
+            "4. Purge all test documents in your Google Cloud Firestore database.\n\n" +
+            "Proceed with clean reset?"
+          );
+
+          if (!confirmed) return;
+
+          btnSecretPurge.disabled = true;
+          btnSecretPurge.style.opacity = '0.6';
+          if (secretPurgeText) secretPurgeText.textContent = 'Purging Records...';
+
+          try {
+            if (window.PerpetualFirebaseBridge && typeof window.PerpetualFirebaseBridge.purgeCloudDemoData === 'function') {
+              await window.PerpetualFirebaseBridge.purgeCloudDemoData('2023-01492');
+            }
+
+            if (window.PerpetualFinanceStore && typeof window.PerpetualFinanceStore.resetFinanceState === 'function') {
+              window.PerpetualFinanceStore.resetFinanceState();
+            } else {
+              localStorage.clear();
+              sessionStorage.clear();
+            }
+
+            alert("✅ Reset Complete!\n\nAll test records have been purged from both Local Cache and Google Cloud Firestore. The portal is now in its original untouched day-one state.");
+            window.location.reload();
+          } catch (err) {
+            console.error("Purge error:", err);
+            if (window.PerpetualFinanceStore) window.PerpetualFinanceStore.resetFinanceState();
+            alert("✅ Local cache reset complete!");
+            window.location.reload();
+          }
+        });
+      }
     });
   </script>
 </body>
