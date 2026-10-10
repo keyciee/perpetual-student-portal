@@ -73,8 +73,8 @@
             <button type="button" class="demo-chip-btn" data-id="2023-01104" data-pass="perpetual2026" style="padding: 4px 10px; font-size: 11px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; color: var(--text-medium); font-weight: 500; cursor: pointer;">Gabriel Dela Cruz</button>
           </div>
           <div id="demo-admin-chips" style="display: none; flex-wrap: wrap; gap: 6px;">
-            <button type="button" class="demo-chip-btn" data-id="EMP-2026-001" data-pass="admin2026" style="padding: 4px 10px; font-size: 11px; background: #FFF5F7; border: 1px solid #FFE4E8; border-radius: 14px; color: var(--primary); font-weight: 600; cursor: pointer;">Dr. Tamayo (Executive Admin)</button>
-            <button type="button" class="demo-chip-btn" data-id="EMP-2026-CASH" data-pass="admin2026" style="padding: 4px 10px; font-size: 11px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; color: var(--text-medium); font-weight: 500; cursor: pointer;">Ma. Teresa Reyes (Chief Cashier)</button>
+            <button type="button" class="demo-chip-btn" data-id="EMP-2026-001" data-pass="admin2026" style="padding: 4px 10px; font-size: 11px; background: #FFF5F7; border: 1px solid #FFE4E8; border-radius: 14px; color: var(--primary); font-weight: 600; cursor: pointer;">Dr. Tamayo (Registrar / Records)</button>
+            <button type="button" class="demo-chip-btn" data-id="EMP-2026-CASH" data-pass="admin2026" style="padding: 4px 10px; font-size: 11px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; color: var(--text-medium); font-weight: 500; cursor: pointer;">Ma. Teresa Reyes (Cashier / Treasury)</button>
           </div>
         </div>
 
@@ -378,7 +378,11 @@
             
             setTimeout(() => {
               if (user.role === 'admin') {
-                window.location.href = 'admin-dashboard.html';
+                if (user.adminId === 'EMP-2026-CASH' || (user.email && user.email.includes('treasury'))) {
+                  window.location.href = 'admin-finance.html';
+                } else {
+                  window.location.href = 'admin-students.html';
+                }
               } else {
                 window.location.href = 'index.html';
               }
