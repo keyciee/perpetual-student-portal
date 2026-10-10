@@ -1526,42 +1526,54 @@ body {
   }
 }
 
-/* Hidden Secret Purge Button (100% Invisible unless hovered) */
+/* Hidden Secret Corner Purge Trigger (Most Bottom-Right Corner) */
 .secret-purge-zone {
-  margin-top: 40px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99999;
+  width: 14px;
+  height: 14px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px 0;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0;
+  margin: 0;
   opacity: 0;
   pointer-events: auto;
-  transition: opacity 0.25s ease;
+  overflow: hidden;
+  transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
   user-select: none;
 }
 
+/* Only reveals when mouse cursor is parked on the exact 14px corner */
 .secret-purge-zone:hover {
+  width: auto;
+  height: auto;
+  padding: 12px;
   opacity: 1;
 }
 
 .secret-purge-btn {
-  background: rgba(220, 38, 38, 0.08);
-  border: 1px dashed rgba(220, 38, 38, 0.4);
-  color: #DC2626;
+  background: rgba(220, 38, 38, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid #DC2626;
+  color: #FFFFFF;
   font-size: 11px;
   font-weight: 700;
-  padding: 8px 18px;
-  border-radius: 20px;
+  padding: 8px 16px;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 7px;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
   transition: all 0.2s ease;
 }
 
 .secret-purge-btn:hover {
-  background: #DC2626;
-  color: #FFFFFF;
-  border-color: #DC2626;
-  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+  background: #B91C1C;
+  border-color: #B91C1C;
   transform: translateY(-1px);
 }
