@@ -246,6 +246,12 @@
     });
 
     saveFinanceState(state);
+
+    // Sync to Firebase Cloud Firestore if active
+    if (window.PerpetualFirebaseBridge && typeof window.PerpetualFirebaseBridge.syncCashIn === 'function') {
+      window.PerpetualFirebaseBridge.syncCashIn(amount, channel, orNum, newReceipt);
+    }
+
     return { orNumber: orNum, receipt: newReceipt, state: state };
   }
 
@@ -292,6 +298,12 @@
     });
 
     saveFinanceState(state);
+
+    // Sync to Firebase Cloud Firestore if active
+    if (window.PerpetualFirebaseBridge && typeof window.PerpetualFirebaseBridge.syncTuitionPayment === 'function') {
+      window.PerpetualFirebaseBridge.syncTuitionPayment(amount, paymentSource, orNum, newReceipt);
+    }
+
     return { orNumber: orNum, receipt: newReceipt, state: state };
   }
 
