@@ -74,10 +74,10 @@
         <div class="welcome-msg">
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
             <span class="admin-badge">Office of the University Registrar</span>
-            <span class="cloud-status-badge"><span class="pulsing-dot"></span> Firestore Synced</span>
+            <span class="cloud-status-badge"><span class="pulsing-dot"></span> Cloud Database Synced</span>
           </div>
-          <h1>Student Directory & Grade Encoding Console</h1>
-          <p>Official student records, clearance management, and live term grade evaluation encoder.</p>
+          <h1>Grade Encoding & Evaluation Console</h1>
+          <p>Official student grade sheet, real-time GPA recalculation, and exam permit clearance gating.</p>
         </div>
         <div class="header-actions">
           <div class="date-badge">
@@ -86,74 +86,29 @@
         </div>
       </header>
 
-      <!-- --- Section 1: Student Master Roster --- -->
-      <section class="portal-card col-12" style="margin-bottom: 24px;">
-        <div class="card-header-row">
-          <div>
-            <h3 class="card-title-main">Student Master Directory</h3>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Active degree program enrollees for Academic Year 2026–2027 (1st Semester).</div>
-          </div>
-        </div>
-
-        <!-- Filter and Search Bar -->
-        <div class="table-filter-bar">
-          <div class="search-input-box">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" id="student-search-input" placeholder="Search by Student ID or Name...">
-          </div>
-
-          <div class="filter-pills-row">
-            <button class="filter-pill-btn active" data-filter="all">All Enrollees</button>
-            <button class="filter-pill-btn" data-filter="dean">Dean's Listers</button>
-            <button class="filter-pill-btn" data-filter="cleared">Cleared</button>
-            <button class="filter-pill-btn" data-filter="hold">Pending / Hold</button>
-          </div>
-        </div>
-
-        <div class="ledger-table-container">
-          <table class="ledger-table">
-            <thead>
-              <tr>
-                <th>Student ID</th>
-                <th>Full Name</th>
-                <th>Degree Program & Year</th>
-                <th style="text-align: center;">Completed Units</th>
-                <th style="text-align: center;">Current GPA</th>
-                <th style="text-align: center;">Clearance Status</th>
-                <th style="text-align: center;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="student-roster-body">
-              <!-- Dynamically populated from academic-store.js -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- --- Section 2: Live Grade Encoding Module --- -->
-      <section class="portal-card col-12" id="grade-encoding-section" style="border: 2px solid #FFE4E8;">
+      <!-- --- Grade Encoding & Evaluation Workspace Card --- -->
+      <section class="portal-card col-12" style="border: 2px solid #FFE4E8;">
+        
+        <!-- Top Toolbar: Student Selection & Heading -->
         <div class="card-header-row" style="border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 16px;">
           <div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="admin-badge" style="background: #FFF5F7;">Faculty & Registrar Encoder</span>
-              <h3 class="card-title-main" style="margin: 0;">Official Grade Sheet & Term Evaluation</h3>
-            </div>
+            <h3 class="card-title-main" style="margin: 0; font-size: 16px;">Term Grade Evaluation Sheet</h3>
             <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
-              Adjust prelim, midterm, or final grades below. Changes reflect <strong>immediately</strong> on the Student Portal and recalculate the student's cumulative GPA.
+              Select student below to adjust Prelim, Midterm, or Finals marks. Saved changes reflect <strong>instantly</strong> on the Student Portal.
             </p>
           </div>
 
           <!-- Active Student Selector Dropdown -->
           <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="select-encoding-student" style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Selected Student:</label>
-            <select id="select-encoding-student" class="form-input" style="font-weight: 700; color: var(--primary); min-width: 220px; font-size: 13px;">
+            <label for="select-encoding-student" style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Student Account:</label>
+            <select id="select-encoding-student" class="form-input" style="font-weight: 700; color: var(--primary); min-width: 250px; font-size: 13px;">
               <!-- Populated dynamically -->
             </select>
           </div>
         </div>
 
         <!-- Student Quick Profile Strip -->
-        <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;">
+        <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;">
           <div>
             <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Student Name</div>
             <div style="font-size: 14px; font-weight: 700; color: var(--text-main);" id="enc-student-name">Juan Dela Cruz</div>
@@ -163,13 +118,13 @@
             <div style="font-size: 14px; font-weight: 700; color: var(--text-main);" id="enc-student-program">BS Information Technology (3rd Year)</div>
           </div>
           <div>
-            <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Live Calculated GPA</div>
+            <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Semester GPA (Live)</div>
             <div style="font-size: 16px; font-weight: 800; color: var(--primary); font-family: var(--font-title);" id="enc-student-gpa">3.78 / 4.00</div>
           </div>
           <div>
             <div style="font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Exam Permit Clearance</div>
             <div style="margin-top: 2px;">
-              <select id="enc-student-clearance" class="grade-select" style="font-size: 11px; padding: 4px 8px;">
+              <select id="enc-student-clearance" class="grade-select" style="font-size: 12px; padding: 4px 8px; width: 100%;">
                 <option value="CLEARED">CLEARED (Permit Issued)</option>
                 <option value="HOLD - Balance">HOLD - Financial Balance</option>
                 <option value="PENDING Evaluation">PENDING Evaluation</option>
@@ -184,13 +139,13 @@
             <thead>
               <tr>
                 <th>Course Code</th>
-                <th>Course Title</th>
+                <th>Course Description</th>
                 <th style="text-align: center;">Units</th>
                 <th>Instructor</th>
-                <th style="text-align: center; background: #FFF9FA;">Prelim Grade</th>
-                <th style="text-align: center; background: #FFF9FA;">Midterm Grade</th>
-                <th style="text-align: center; background: #FFF9FA;">Finals Grade</th>
-                <th style="text-align: center;">Term Grade</th>
+                <th style="text-align: center; background: #FFF9FA;">Prelim</th>
+                <th style="text-align: center; background: #FFF9FA;">Midterm</th>
+                <th style="text-align: center; background: #FFF9FA;">Finals</th>
+                <th style="text-align: center;">Term Average</th>
                 <th style="text-align: center;">Evaluation</th>
               </tr>
             </thead>
@@ -202,16 +157,15 @@
 
         <!-- Grade Sheet Action Bar -->
         <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 16px;">
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted);">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <span>Grading Scale: 1.00 (Excellent) to 3.00 (Passing) • 5.00 (Failed)</span>
+          <div style="font-size: 12px; color: var(--text-muted);">
+            Official Philippine Academic Scale: <strong>1.00 (98-100%)</strong> to <strong>3.00 (75% Passing)</strong>
           </div>
 
           <div style="display: flex; gap: 10px;">
             <button type="button" class="btn btn-secondary" id="btn-reset-grades" style="padding: 9px 16px; font-size: 13px;">
               Reset to Original
             </button>
-            <button type="button" class="btn btn-primary" id="btn-save-grades" style="padding: 9px 22px; font-size: 13px; font-weight: 700; gap: 8px;">
+            <button type="button" class="btn btn-primary" id="btn-save-grades" style="padding: 9px 24px; font-size: 13px; font-weight: 700; gap: 8px;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
               Save & Post to Student Portal
             </button>
@@ -256,10 +210,7 @@
       let academicState = PerpetualAcademicStore.getAcademicState();
 
       const studentSelectEl = document.getElementById('select-encoding-student');
-      const rosterTbody = document.getElementById('student-roster-body');
       const gradesTbody = document.getElementById('grades-sheet-body');
-      const searchInput = document.getElementById('student-search-input');
-      const filterPills = document.querySelectorAll('.filter-pill-btn');
 
       const encNameEl = document.getElementById('enc-student-name');
       const encProgEl = document.getElementById('enc-student-program');
@@ -290,61 +241,6 @@
           if (id === selectedStudentId) opt.selected = true;
           studentSelectEl.appendChild(opt);
         }
-      }
-
-      // Render Student Directory Table
-      function renderStudentDirectory(filter = 'all', query = '') {
-        rosterTbody.innerHTML = '';
-        const q = query.trim().toLowerCase();
-
-        for (const id in academicState) {
-          const s = academicState[id];
-
-          // Filter by search query
-          if (q && !s.fullName.toLowerCase().includes(q) && !s.studentId.toLowerCase().includes(q) && !s.program.toLowerCase().includes(q)) {
-            continue;
-          }
-
-          // Filter by category
-          if (filter === 'dean' && !s.status.includes('Dean') && !s.status.includes('President') && !s.status.includes('Scholar')) {
-            continue;
-          }
-          if (filter === 'cleared' && s.clearance !== 'CLEARED') {
-            continue;
-          }
-          if (filter === 'hold' && s.clearance === 'CLEARED') {
-            continue;
-          }
-
-          const tr = document.createElement('tr');
-          const isHold = s.clearance.includes('HOLD');
-          const clearanceClass = isHold ? 'hold' : (s.clearance === 'CLEARED' ? 'cleared' : 'pending');
-
-          tr.innerHTML = `
-            <td style="font-family: monospace; font-weight: 700; color: var(--primary);">${s.studentId}</td>
-            <td style="font-weight: 600; color: var(--text-main);">${s.fullName}</td>
-            <td>${s.program} • ${s.yearLevel.split(' ')[0]} Year</td>
-            <td style="text-align: center;">${s.completedCredits.split(' ')[0]} Units</td>
-            <td style="text-align: center; font-weight: 700; color: var(--primary);">${s.gpa.toFixed(2)}</td>
-            <td style="text-align: center;"><span class="badge-status ${clearanceClass}">${s.clearance}</span></td>
-            <td style="text-align: center;">
-              <button class="btn btn-secondary btn-select-student" data-id="${s.studentId}" style="padding: 4px 10px; font-size: 11px;">
-                Encode Grades →
-              </button>
-            </td>
-          `;
-          rosterTbody.appendChild(tr);
-        }
-
-        // Bind Encode Grades buttons
-        rosterTbody.querySelectorAll('.btn-select-student').forEach(btn => {
-          btn.addEventListener('click', () => {
-            selectedStudentId = btn.getAttribute('data-id');
-            studentSelectEl.value = selectedStudentId;
-            loadStudentGradeSheet(selectedStudentId);
-            document.getElementById('grade-encoding-section').scrollIntoView({ behavior: 'smooth' });
-          });
-        });
       }
 
       // Load & Render Student Grade Sheet
@@ -393,7 +289,7 @@
           gradesTbody.appendChild(tr);
         });
 
-        // Bind change events to recalculate on the fly
+        // Bind live change recalculation
         gradesTbody.querySelectorAll('.grade-select').forEach(sel => {
           sel.addEventListener('change', recalcDynamicGpa);
         });
@@ -448,18 +344,16 @@
 
         // Refresh state
         academicState = PerpetualAcademicStore.getAcademicState();
-        renderStudentDirectory();
         loadStudentGradeSheet(selectedStudentId);
 
-        showToast(`✅ Grades posted! Records for ${student.fullName} are now synced to Student Portal.`);
+        showToast(`✅ Grades posted! Records for ${student.fullName} are now synced live.`);
       });
 
       // Reset to original
       btnResetGrades.addEventListener('click', () => {
-        if (confirm(`Reset all grades for ${academicState[selectedStudentId].fullName} to default records?`)) {
+        if (confirm(`Reset grades for ${academicState[selectedStudentId].fullName} to default records?`)) {
           PerpetualAcademicStore.resetAcademicState();
           academicState = PerpetualAcademicStore.getAcademicState();
-          renderStudentDirectory();
           loadStudentGradeSheet(selectedStudentId);
           showToast('Grades reset to default academic state.');
         }
@@ -471,24 +365,8 @@
         loadStudentGradeSheet(selectedStudentId);
       });
 
-      // Filter pills
-      filterPills.forEach(pill => {
-        pill.addEventListener('click', () => {
-          filterPills.forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-          renderStudentDirectory(pill.getAttribute('data-filter'), searchInput.value);
-        });
-      });
-
-      // Search input
-      searchInput.addEventListener('input', (e) => {
-        const activeFilter = document.querySelector('.filter-pill-btn.active')?.getAttribute('data-filter') || 'all';
-        renderStudentDirectory(activeFilter, e.target.value);
-      });
-
       // Initial render
       populateStudentDropdown();
-      renderStudentDirectory();
       loadStudentGradeSheet(selectedStudentId);
     });
   </script>

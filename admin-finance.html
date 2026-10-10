@@ -74,24 +74,20 @@
         <div class="welcome-msg">
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
             <span class="admin-badge">Treasury & Accounting Division</span>
-            <span class="cloud-status-badge"><span class="pulsing-dot"></span> Firestore Synced</span>
+            <span class="cloud-status-badge"><span class="pulsing-dot"></span> Cloud Database Synced</span>
           </div>
           <h1>University Cashier & Collections Terminal</h1>
-          <p>Real-time payment audit, official receipt generation, and on-campus over-the-counter settlement processing.</p>
+          <p>On-campus walk-in payment processing, digital deposit auditing, and official receipt issuance.</p>
         </div>
         <div class="header-actions">
           <div class="date-badge">
             <span id="finance-header-date">Wednesday, Jul 29, 2026</span>
           </div>
-          <button class="btn btn-secondary" onclick="window.print()" style="padding: 7px 12px; font-size: 12px; gap: 6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-            Print Daily Cashier Audit
-          </button>
         </div>
       </header>
 
-      <!-- --- Treasury KPIs --- -->
-      <div class="admin-metrics-grid">
+      <!-- --- Treasury Clean 3-Metric Summary Strip --- -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
         <div class="metric-card">
           <div class="metric-top-row">
             <span class="metric-title">Cleared Collections</span>
@@ -105,35 +101,24 @@
 
         <div class="metric-card">
           <div class="metric-top-row">
-            <span class="metric-title">Student Card Deposits</span>
+            <span class="metric-title">Perpetual Card Deposits</span>
             <div class="metric-icon-box green">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
             </div>
           </div>
           <div class="metric-value" id="tf-card-deposits">₱0.00</div>
-          <div class="metric-subtext">Perpetual Dalta Card Balance</div>
+          <div class="metric-subtext">Active Student Digital Balance</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-top-row">
-            <span class="metric-title">Assessment Receivables</span>
+            <span class="metric-title">Outstanding Receivables</span>
             <div class="metric-icon-box gold">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             </div>
           </div>
           <div class="metric-value" id="tf-receivables">₱14,850.00</div>
-          <div class="metric-subtext">Remaining Balance</div>
-        </div>
-
-        <div class="metric-card">
-          <div class="metric-top-row">
-            <span class="metric-title">Total Term Assessment</span>
-            <div class="metric-icon-box navy">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-            </div>
-          </div>
-          <div class="metric-value">₱24,500.00</div>
-          <div class="metric-subtext">18 Units Assessment</div>
+          <div class="metric-subtext">Pending Midterm & Final Settlement</div>
         </div>
       </div>
 
@@ -141,94 +126,81 @@
       <div class="dashboard-grid">
         
         <!-- Over the counter Cashier Entry Terminal (Col 4) -->
-        <section class="portal-card col-4">
-          <div class="card-header-row" style="margin-bottom: 14px;">
-            <div>
-              <h3 class="card-title-main">Cashier Terminal (POS)</h3>
-              <div style="font-size: 11px; color: var(--text-muted);">Process on-campus over-the-counter payments.</div>
+        <section class="portal-card col-4" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="card-header-row" style="margin-bottom: 14px;">
+              <div>
+                <h3 class="card-title-main" style="margin: 0; font-size: 15px;">Cashier Window (POS)</h3>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Process walk-in counter payment.</div>
+              </div>
             </div>
+
+            <form id="cashier-entry-form" style="display: flex; flex-direction: column; gap: 14px;">
+              
+              <!-- Student Selection -->
+              <div>
+                <label class="form-label" for="cashier-student-select">Student Account</label>
+                <select id="cashier-student-select" class="form-input" style="width: 100%; font-weight: 600; font-size: 13px;">
+                  <option value="2023-01492">Juan Dela Cruz (2023-01492) - BS IT</option>
+                  <option value="2023-01104">Gabriel M. Dela Cruz (2023-01104) - BS IT</option>
+                  <option value="2023-01822">Samantha Nicole Santos (2023-01822) - BS IT</option>
+                  <option value="2023-01550">Christian Dale Mendoza (2023-01550) - BS IT</option>
+                  <option value="2023-01688">Marc Dominic Ramos (2023-01688) - BS IT</option>
+                </select>
+              </div>
+
+              <!-- Transaction Category Pills -->
+              <div>
+                <label class="form-label">Payment Type</label>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                  <label style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; background: #FFF5F7; padding: 8px 10px; border-radius: 6px; border: 1px solid #FFE4E8; cursor: pointer;">
+                    <input type="radio" name="cashier-type" value="tuition" checked>
+                    <span style="font-weight: 700; color: var(--primary);">Tuition Settlement</span>
+                  </label>
+                  <label style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; background: #F8FAFC; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;">
+                    <input type="radio" name="cashier-type" value="card">
+                    <span style="font-weight: 600;">Card Top-Up</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Amount Input & Quick Chips -->
+              <div>
+                <label class="form-label" for="cashier-amount-input">Amount (₱)</label>
+                <input type="number" id="cashier-amount-input" class="form-input" placeholder="e.g. 2500" min="100" step="50" style="width: 100%; font-size: 16px; font-weight: 800; color: var(--primary);" value="2500" required>
+                <div style="display: flex; gap: 6px; margin-top: 6px;">
+                  <button type="button" class="btn btn-secondary amount-chip" data-amt="1000" style="padding: 2px 8px; font-size: 11px;">+₱1,000</button>
+                  <button type="button" class="btn btn-secondary amount-chip" data-amt="2500" style="padding: 2px 8px; font-size: 11px;">+₱2,500</button>
+                  <button type="button" class="btn btn-secondary amount-chip" data-amt="5000" style="padding: 2px 8px; font-size: 11px;">+₱5,000</button>
+                </div>
+              </div>
+
+              <!-- Payment Channel -->
+              <div>
+                <label class="form-label" for="cashier-channel-select">Tender Channel</label>
+                <select id="cashier-channel-select" class="form-input" style="width: 100%; font-size: 12px;">
+                  <option value="Cashier Window (Cash)">Cash (On-Campus Counter)</option>
+                  <option value="University POS (Debit/Credit Card)">POS Debit / Credit Card Terminal</option>
+                  <option value="GCash Counter">GCash Counter Verification</option>
+                  <option value="Maya Counter">Maya Counter Verification</option>
+                </select>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="btn btn-primary" id="btn-process-cashier" style="margin-top: 6px; justify-content: center; padding: 12px; font-size: 13px; font-weight: 700; gap: 8px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                Process & Issue Official Receipt →
+              </button>
+            </form>
           </div>
-
-          <form id="cashier-entry-form" style="display: flex; flex-direction: column; gap: 14px;">
-            
-            <!-- Student Selection -->
-            <div>
-              <label class="form-label" for="cashier-student-select">Student Account</label>
-              <select id="cashier-student-select" class="form-input" style="width: 100%; font-weight: 600;">
-                <option value="2023-01492">Juan Dela Cruz (2023-01492) - BS IT</option>
-                <option value="2023-01104">Gabriel M. Dela Cruz (2023-01104) - BS IT</option>
-                <option value="2023-01822">Samantha Nicole Santos (2023-01822) - BS IT</option>
-                <option value="2023-01550">Christian Dale Mendoza (2023-01550) - BS IT</option>
-                <option value="2023-01688">Marc Dominic Ramos (2023-01688) - BS IT</option>
-              </select>
-            </div>
-
-            <!-- Transaction Type -->
-            <div>
-              <label class="form-label">Transaction Category</label>
-              <div style="display: flex; gap: 8px; margin-top: 4px;">
-                <label style="flex: 1; display: flex; align-items: center; gap: 6px; font-size: 12px; background: #F8FAFC; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;">
-                  <input type="radio" name="cashier-type" value="tuition" checked>
-                  <span style="font-weight: 600;">Tuition Fee</span>
-                </label>
-                <label style="flex: 1; display: flex; align-items: center; gap: 6px; font-size: 12px; background: #F8FAFC; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;">
-                  <input type="radio" name="cashier-type" value="card">
-                  <span style="font-weight: 600;">Card Cash-In</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Amount Input & Quick Chips -->
-            <div>
-              <label class="form-label" for="cashier-amount-input">Payment Amount (₱)</label>
-              <input type="number" id="cashier-amount-input" class="form-input" placeholder="e.g. 5000.00" min="100" step="50" style="width: 100%; font-size: 15px; font-weight: 700; color: var(--primary);" value="2500" required>
-              <div style="display: flex; gap: 6px; margin-top: 6px;">
-                <button type="button" class="btn btn-secondary amount-chip" data-amt="1000" style="padding: 2px 8px; font-size: 11px;">+₱1,000</button>
-                <button type="button" class="btn btn-secondary amount-chip" data-amt="2500" style="padding: 2px 8px; font-size: 11px;">+₱2,500</button>
-                <button type="button" class="btn btn-secondary amount-chip" data-amt="5000" style="padding: 2px 8px; font-size: 11px;">+₱5,000</button>
-              </div>
-            </div>
-
-            <!-- Payment Tender Channel -->
-            <div>
-              <label class="form-label" for="cashier-channel-select">Tender Channel</label>
-              <select id="cashier-channel-select" class="form-input" style="width: 100%;">
-                <option value="Cashier Window (Cash)">Cash (On-Campus Cashier Counter)</option>
-                <option value="University POS (Debit/Credit Card)">POS Debit / Credit Card Terminal</option>
-                <option value="Bank Check / Manager's Check">Manager's Check (BDO / BPI)</option>
-                <option value="GCash">GCash Counter Verification</option>
-                <option value="Maya">Maya Counter Verification</option>
-              </select>
-            </div>
-
-            <!-- Particulars / Notes -->
-            <div>
-              <label class="form-label" for="cashier-notes-input">Particulars / Remarks</label>
-              <input type="text" id="cashier-notes-input" class="form-input" style="width: 100%; font-size: 12px;" value="On-Campus Midterm Clearance Settlement">
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary" id="btn-process-cashier" style="margin-top: 8px; justify-content: center; padding: 12px; font-size: 13px; font-weight: 700; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-              Process & Issue Official Receipt
-            </button>
-          </form>
         </section>
 
         <!-- Master Treasury Ledger Table (Col 8) -->
         <section class="portal-card col-8">
           <div class="card-header-row" style="margin-bottom: 14px;">
             <div>
-              <h3 class="card-title-main">Treasury Master Ledger</h3>
-              <div style="font-size: 11px; color: var(--text-muted);">Real-time log of all debit assessments and credit collections.</div>
-            </div>
-            
-            <div style="display: flex; gap: 8px;">
-              <select id="ledger-filter-select" class="form-input" style="font-size: 11px; padding: 5px 8px;">
-                <option value="all">All Transactions</option>
-                <option value="credit">Credit Payments Only</option>
-                <option value="debit">Debit Assessments Only</option>
-              </select>
+              <h3 class="card-title-main" style="margin: 0; font-size: 15px;">Treasury Master Ledger</h3>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Real-time stream of all tuition billings and validated collections.</div>
             </div>
           </div>
 
@@ -237,11 +209,10 @@
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Reference OR / Bill</th>
+                  <th>Reference OR #</th>
                   <th>Particulars</th>
-                  <th style="text-align: right;">Debit (Billed)</th>
                   <th style="text-align: right;">Credit (Paid)</th>
-                  <th style="text-align: right;">Running Bal</th>
+                  <th style="text-align: right;">Balance</th>
                   <th style="text-align: center;">Action</th>
                 </tr>
               </thead>
@@ -259,12 +230,12 @@
 
   <!-- Soft Copy Official Receipt Modal -->
   <div class="modal-backdrop" id="admin-receipt-modal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(5px); z-index: 999; display: none; align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: #FFFFFF; border-radius: 12px; max-width: 620px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+    <div style="background: #FFFFFF; border-radius: 12px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
         <div style="display: flex; gap: 12px; align-items: center;">
-          <img src="uphsd-logo.png" style="width: 46px; height: auto;" alt="Seal">
+          <img src="uphsd-logo.png" style="width: 44px; height: auto;" alt="Seal">
           <div>
-            <h4 style="font-size: 15px; margin: 0; color: var(--primary);">UNIVERSITY OF PERPETUAL HELP SYSTEM DALTA</h4>
+            <h4 style="font-size: 14px; margin: 0; color: var(--primary);">UNIVERSITY OF PERPETUAL HELP SYSTEM DALTA</h4>
             <div style="font-size: 11px; color: var(--text-muted);">MOLINO CAMPUS • OFFICIAL TREASURY RECEIPT</div>
           </div>
         </div>
@@ -272,28 +243,24 @@
       </div>
 
       <div id="finance-receipt-content" style="font-size: 13px; line-height: 1.6;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; background: #F8FAFC; padding: 12px; border-radius: 6px;">
-          <div><span style="color: var(--text-muted);">OR Number:</span> <strong id="m-rcpt-or" style="font-family: monospace; color: var(--primary);">—</strong></div>
-          <div><span style="color: var(--text-muted);">Date & Time:</span> <span id="m-rcpt-datetime">—</span></div>
-          <div><span style="color: var(--text-muted);">Student Account:</span> <strong>Juan Dela Cruz (2023-01492)</strong></div>
-          <div><span style="color: var(--text-muted);">Channel:</span> <span id="m-rcpt-channel">—</span></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; background: #F8FAFC; padding: 12px; border-radius: 6px;">
+          <div><span style="color: var(--text-muted); font-size: 11px;">OR Number:</span> <br><strong id="m-rcpt-or" style="font-family: monospace; color: var(--primary);">—</strong></div>
+          <div><span style="color: var(--text-muted); font-size: 11px;">Date & Time:</span> <br><span id="m-rcpt-datetime">—</span></div>
+          <div><span style="color: var(--text-muted); font-size: 11px;">Student:</span> <br><strong>Juan Dela Cruz (2023-01492)</strong></div>
+          <div><span style="color: var(--text-muted); font-size: 11px;">Channel:</span> <br><span id="m-rcpt-channel">—</span></div>
         </div>
 
-        <div style="border-top: 1px dashed var(--border-color); border-bottom: 1px dashed var(--border-color); padding: 14px 0; margin-bottom: 16px;">
-          <div style="display: flex; justify-content: space-between;">
+        <div style="border-top: 1px dashed var(--border-color); border-bottom: 1px dashed var(--border-color); padding: 12px 0; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
             <span id="m-rcpt-title" style="font-weight: 700; font-size: 14px;">Tuition Settlement</span>
             <span id="m-rcpt-amount" style="font-weight: 800; color: var(--primary); font-size: 18px;">₱0.00</span>
           </div>
           <div id="m-rcpt-particulars" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">—</div>
-          <div style="font-size: 11px; color: var(--text-medium); margin-top: 6px;"><strong>Amount in Words:</strong> <span id="m-rcpt-words">—</span></div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-          <div>
-            <div style="font-size: 11px; color: var(--success); font-weight: 700;">★ VERIFIED TREASURY CASHIER RECORD ★</div>
-            <div style="font-size: 10px; color: var(--text-muted);">Electronic Certificate: CERT-UPHSD-01 • Ma. Teresa Reyes, CPA</div>
-          </div>
-          <button class="btn btn-primary" onclick="window.print()" style="font-size: 12px; padding: 8px 16px;">Print Official Copy</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+          <div style="font-size: 11px; color: var(--success); font-weight: 700;">★ AUDIT VERIFIED BY COMPTROLLER ★</div>
+          <button class="btn btn-primary" onclick="window.print()" style="font-size: 12px; padding: 7px 16px;">Print Official Copy</button>
         </div>
       </div>
     </div>
@@ -353,26 +320,19 @@
         document.getElementById('tf-receivables').textContent = `₱${finance.outstandingBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
         const tbody = document.getElementById('treasury-master-ledger-body');
-        const filterVal = document.getElementById('ledger-filter-select')?.value || 'all';
-
         tbody.innerHTML = '';
         const txs = [...finance.transactions].reverse();
 
         txs.forEach(tx => {
-          if (filterVal === 'credit' && !tx.credit) return;
-          if (filterVal === 'debit' && !tx.debit) return;
-
           const tr = document.createElement('tr');
-          const debitStr = tx.debit ? `₱${parseFloat(tx.debit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
-          const creditStr = tx.credit ? `₱${parseFloat(tx.credit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—';
+          const creditStr = tx.credit ? `₱${parseFloat(tx.credit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : (tx.debit ? `₱${parseFloat(tx.debit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (Debit)` : '—');
           const balanceStr = `₱${parseFloat(tx.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
           tr.innerHTML = `
             <td>${tx.date}</td>
             <td style="font-family: monospace; font-weight: 700; color: var(--primary);">${tx.ref}</td>
             <td>${tx.particulars}</td>
-            <td style="text-align: right; font-weight: ${tx.debit ? '600' : '400'}; color: ${tx.debit ? 'var(--text-main)' : 'var(--text-muted)'};">${debitStr}</td>
-            <td style="text-align: right; font-weight: 700; color: ${tx.credit ? 'var(--success)' : 'var(--text-muted)'};">${creditStr}</td>
+            <td style="text-align: right; font-weight: 700; color: ${tx.credit ? 'var(--success)' : 'var(--text-main)'};">${creditStr}</td>
             <td style="text-align: right; font-weight: 700; color: var(--primary);">${balanceStr}</td>
             <td style="text-align: center;">
               <button class="btn btn-secondary btn-view-rcpt" data-ref="${tx.ref}" style="padding: 3px 8px; font-size: 11px;">View OR</button>
@@ -411,7 +371,6 @@
         document.getElementById('m-rcpt-title').textContent = rcpt.title;
         document.getElementById('m-rcpt-particulars').textContent = rcpt.particulars;
         document.getElementById('m-rcpt-amount').textContent = `₱${parseFloat(rcpt.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        document.getElementById('m-rcpt-words').textContent = rcpt.amountWords || '';
         modal.style.display = 'flex';
       }
 
@@ -428,30 +387,25 @@
 
         const type = document.querySelector('input[name="cashier-type"]:checked').value;
         const channel = document.getElementById('cashier-channel-select').value;
-        const notes = document.getElementById('cashier-notes-input').value;
 
         let result;
         if (type === 'tuition') {
-          result = PerpetualFinanceStore.recordTuitionPayment(amt, channel, notes || 'Over-the-Counter Tuition Settlement');
+          result = PerpetualFinanceStore.recordTuitionPayment(amt, channel, 'On-Campus Tuition Settlement');
         } else {
           result = PerpetualFinanceStore.recordCashIn(amt, channel, 'OVER-THE-COUNTER');
         }
 
         renderTreasury();
-        showToast(`✅ Official Receipt ${result.orNumber} generated and posted to treasury ledger!`);
+        showToast(`✅ Official Receipt ${result.orNumber} generated and posted!`);
 
-        // Automatically show the generated Official Receipt
         setTimeout(() => {
           showReceiptModal(result.orNumber, PerpetualFinanceStore.getFinanceState());
-        }, 400);
+        }, 350);
       });
-
-      // Filter change
-      document.getElementById('ledger-filter-select')?.addEventListener('change', renderTreasury);
 
       renderTreasury();
 
-      // Listen for updates from other tabs
+      // Listen for updates
       window.addEventListener('storage', renderTreasury);
       window.addEventListener('perpetualFinanceChanged', renderTreasury);
       window.addEventListener('focus', renderTreasury);
