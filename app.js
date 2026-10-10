@@ -55,4 +55,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // --- 4. Dynamic Perpetual Card Balance & Financial Synchronization ---
+  function updateDashboardFinance() {
+    if (typeof PerpetualFinanceStore === 'undefined' || typeof PerpetualFinanceStore.getFinanceState !== 'function') return;
+
+    const finance = PerpetualFinanceStore.getFinanceState();
+
+    // Perpetual Card balance
+    const cardBalEl = document.getElementById('dashboard-card-balance');
+    if (cardBalEl) {
+      cardBalEl.textContent = `₱${finance.cardBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    // Student account on the card
+    const studentEl = document.getElementById('dashboard-card-student');
+    if (studentEl) {
+      const session = typeof getPortalSession === 'function' ? getPortalSession() : null;
+      const name = session ? session.fullName : "Juan Dela Cruz";
+      const id = session ? session.studentId : "2023-01492";
+      studentEl.textContent = `${name} (${id})`;
+    }
+
+    // Total assessment figure if present
+    const totalAssmtEl = document.getElementById('dashboard-total-assessment');
+    if (totalAssmtEl && finance.totalAssessment) {
+      totalAssmtEl.textContent = `₱${finance.totalAssessment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (18 Units)`;
+    }
+  }
+
+  // Initial call
+  updateDashboardFinance();
+
+  // Multi-tab / cross-window storage synchronization
+  window.addEventListener('storage', (e) => {
+    if (!e.key || e.key.startsWith('perpetual_')) {
+      updateDashboardFinance();
+    }
+  });
+
+  // Local window custom event synchronization
+  window.addEventListener('perpetualFinanceChanged', () => {
+    updateDashboardFinance();
+  });
+
+  // Re-sync on window focus & tab visibility change
+  window.addEventListener('focus', updateDashboardFinance);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      updateDashboardFinance();
+    }
+  });
+
 });

@@ -197,6 +197,10 @@
     if (state.totalAssessment !== undefined) localStorage.setItem(STORAGE_KEYS.TOTAL_ASSESSMENT, state.totalAssessment);
     if (state.receipts !== undefined) localStorage.setItem(STORAGE_KEYS.RECEIPTS, JSON.stringify(state.receipts));
     if (state.transactions !== undefined) localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(state.transactions));
+
+    try {
+      window.dispatchEvent(new CustomEvent('perpetualFinanceChanged', { detail: state }));
+    } catch (e) {}
   }
 
   function recordCashIn(amount, channel, accountNo) {
@@ -249,7 +253,7 @@
 
     // Sync to Firebase Cloud Firestore if active
     if (window.PerpetualFirebaseBridge && typeof window.PerpetualFirebaseBridge.syncCashIn === 'function') {
-      window.PerpetualFirebaseBridge.syncCashIn(amount, channel, orNum, newReceipt);
+      window.PerpetualFirebaseBridge.syncCashIn(amount, channel, orNum, newReceipt, state.cardBalance);
     }
 
     return { orNumber: orNum, receipt: newReceipt, state: state };
@@ -301,7 +305,7 @@
 
     // Sync to Firebase Cloud Firestore if active
     if (window.PerpetualFirebaseBridge && typeof window.PerpetualFirebaseBridge.syncTuitionPayment === 'function') {
-      window.PerpetualFirebaseBridge.syncTuitionPayment(amount, paymentSource, orNum, newReceipt);
+      window.PerpetualFirebaseBridge.syncTuitionPayment(amount, paymentSource, orNum, newReceipt, state.cardBalance, state.outstandingBalance);
     }
 
     return { orNumber: orNum, receipt: newReceipt, state: state };

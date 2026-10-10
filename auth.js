@@ -218,8 +218,13 @@ function hydratePortalUI() {
   }
 
   const cardBalanceVal = document.getElementById('dashboard-card-balance');
-  if (cardBalanceVal && session.balance) {
-    cardBalanceVal.textContent = session.balance;
+  if (cardBalanceVal) {
+    if (typeof PerpetualFinanceStore !== 'undefined' && typeof PerpetualFinanceStore.getFinanceState === 'function') {
+      const finState = PerpetualFinanceStore.getFinanceState();
+      cardBalanceVal.textContent = `₱${finState.cardBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    } else if (session.balance) {
+      cardBalanceVal.textContent = session.balance;
+    }
   }
 
   const gpaValueEl = document.querySelector('.gpa-value');
@@ -252,9 +257,14 @@ function hydratePortalUI() {
     finCardStudent.textContent = `${session.fullName} (${session.studentId})`;
   }
 
-  const finCardBalance = document.getElementById('finance-card-balance');
-  if (finCardBalance && session.balance) {
-    finCardBalance.textContent = session.balance;
+  const finCardBalance = document.getElementById('card-balance-display') || document.getElementById('finance-card-balance');
+  if (finCardBalance) {
+    if (typeof PerpetualFinanceStore !== 'undefined' && typeof PerpetualFinanceStore.getFinanceState === 'function') {
+      const finState = PerpetualFinanceStore.getFinanceState();
+      finCardBalance.textContent = `₱${finState.cardBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    } else if (session.balance) {
+      finCardBalance.textContent = session.balance;
+    }
   }
 
   const finLedgerId = document.getElementById('finance-ledger-student-id');

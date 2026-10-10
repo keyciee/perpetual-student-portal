@@ -32,7 +32,7 @@
   }
 
   // Sync cash-in transaction and generated receipt to Firestore
-  async function syncCashIn(amount, channel, orNumber, receipt) {
+  async function syncCashIn(amount, channel, orNumber, receipt, currentCardBalance) {
     if (!db || !isConnected) return;
     try {
       const studentSession = window.getPortalSession ? window.getPortalSession() : { studentId: "2023-01492" };
@@ -57,11 +57,15 @@
       });
 
       // 3. Update student balance in 'students' collection
-      await db.collection("students").doc(studentId).set({
+      const updateData = {
         studentId: studentId,
         lastTransaction: orNumber,
         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
+      };
+      if (typeof currentCardBalance === 'number') {
+        updateData.cardBalance = currentCardBalance;
+      }
+      await db.collection("students").doc(studentId).set(updateData, { merge: true });
 
       console.log(`✅ [Firebase Cloud DB] Synced Cash-In (${orNumber}) for student ${studentId} to Firestore.`);
     } catch (err) {
@@ -70,7 +74,7 @@
   }
 
   // Sync tuition payment and assessment deduction to Firestore
-  async function syncTuitionPayment(amount, paymentSource, orNumber, receipt) {
+  async function syncTuitionPayment(amount, paymentSource, orNumber, receipt, currentCardBalance, currentOutstanding) {
     if (!db || !isConnected) return;
     try {
       const studentSession = window.getPortalSession ? window.getPortalSession() : { studentId: "2023-01492" };
@@ -95,11 +99,18 @@
       });
 
       // 3. Update student balance in 'students' collection
-      await db.collection("students").doc(studentId).set({
+      const updateData = {
         studentId: studentId,
         lastTuitionPayment: orNumber,
         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
+      };
+      if (typeof currentCardBalance === 'number') {
+        updateData.cardBalance = currentCardBalance;
+      }
+      if (typeof currentOutstanding === 'number') {
+        updateData.outstandingBalance = currentOutstanding;
+      }
+      await db.collection("students").doc(studentId).set(updateData, { merge: true });
 
       console.log(`✅ [Firebase Cloud DB] Synced Tuition Settlement (${orNumber}) for student ${studentId} to Firestore.`);
     } catch (err) {
