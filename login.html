@@ -110,6 +110,14 @@
             <span id="btn-submit-text">Sign In to Student Portal →</span>
             <div class="btn-login-spinner" id="btn-submit-spinner"></div>
           </button>
+
+          <!-- Data Privacy Notice (R.A. 10173 Compliance) -->
+          <div class="login-privacy-notice">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>By signing in, you agree that your academic and financial records are processed in compliance with <strong>R.A. 10173 (Data Privacy Act of 2012)</strong> and the UPHSD Privacy Policy. <a href="javascript:void(0)" id="btn-open-privacy" class="privacy-link">Read Privacy Notice</a></span>
+          </div>
         </form>
 
       </div>
@@ -135,6 +143,49 @@
         </ul>
         <button class="btn btn-primary" id="btn-modal-dismiss" style="width: 100%; justify-content: center;">
           Understood, Continue
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       Data Privacy Notice Modal (R.A. 10173)
+       ========================================== -->
+  <div class="login-modal-overlay" id="privacy-modal">
+    <div class="login-modal-box" style="max-width: 500px;">
+      <div class="modal-header-row">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A1315" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <h3 style="margin: 0; font-size: 16px;">Institutional Data Privacy Notice</h3>
+        </div>
+        <button class="btn-modal-close" id="btn-close-privacy">&times;</button>
+      </div>
+      <div class="modal-body-content" style="max-height: 65vh; overflow-y: auto; padding-right: 4px;">
+        <p style="background: #F8FAFC; padding: 8px 12px; border-left: 3px solid #7A1315; border-radius: 4px; font-size: 12px; margin-bottom: 12px;">
+          <strong>Compliance Statement:</strong> In adherence to <strong>Republic Act No. 10173 (Data Privacy Act of 2012)</strong> and the National Privacy Commission (NPC), the University of Perpetual Help System DALTA – Molino Campus is committed to protecting your personal data privacy.
+        </p>
+        <p><strong>1. Scope of Information Processed:</strong></p>
+        <ul style="margin: 4px 0 10px 20px; font-size: 12px;">
+          <li>Student Profile (Full Name, Student ID, Institutional Email)</li>
+          <li>Academic Performance (Course units, grades, attendance, curriculum standing)</li>
+          <li>Financial Ledgers (Tuition billing statements, payment channels, transaction IDs)</li>
+        </ul>
+        <p><strong>2. Institutional Purpose:</strong></p>
+        <p style="font-size: 12px; margin-bottom: 10px;">
+          Collected records are processed exclusively for official academic evaluation, semester enrollment verification, cashierless tuition settlement, and RFID student smart card authorization.
+        </p>
+        <p><strong>3. Data Confidentiality & Security:</strong></p>
+        <p style="font-size: 12px; margin-bottom: 10px;">
+          All sensitive transactions are encrypted and stored within verified session scopes. No personal educational information is shared with unauthorized third parties or commercial entities.
+        </p>
+        <p><strong>4. Student Rights:</strong></p>
+        <p style="font-size: 12px; margin-bottom: 14px;">
+          Students have the right to access, inspect, and request correction of inaccurate institutional records through the Campus Registrar and Data Protection Office.
+        </p>
+        <button class="btn btn-primary" id="btn-privacy-dismiss" style="width: 100%; justify-content: center;">
+          I Understand & Agree
         </button>
       </div>
     </div>
@@ -252,6 +303,28 @@
       helpModal.addEventListener('click', (e) => {
         if (e.target === helpModal) closeModal();
       });
+
+      // 8. Data Privacy Modal Controls (R.A. 10173)
+      const privacyModal = document.getElementById('privacy-modal');
+      const openPrivacyBtn = document.getElementById('btn-open-privacy');
+      const closePrivacyBtn = document.getElementById('btn-close-privacy');
+      const dismissPrivacyBtn = document.getElementById('btn-privacy-dismiss');
+
+      if (openPrivacyBtn && privacyModal) {
+        openPrivacyBtn.addEventListener('click', () => {
+          privacyModal.classList.add('show');
+        });
+
+        const closePrivacy = () => {
+          privacyModal.classList.remove('show');
+        };
+
+        if (closePrivacyBtn) closePrivacyBtn.addEventListener('click', closePrivacy);
+        if (dismissPrivacyBtn) dismissPrivacyBtn.addEventListener('click', closePrivacy);
+        privacyModal.addEventListener('click', (e) => {
+          if (e.target === privacyModal) closePrivacy();
+        });
+      }
     });
   </script>
 </body>

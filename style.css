@@ -1426,6 +1426,36 @@ body {
   margin-bottom: 16px;
 }
 
+/* Login Data Privacy Notice (R.A. 10173) */
+.login-privacy-notice {
+  margin-top: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: left;
+}
+
+.login-privacy-notice svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--primary);
+}
+
+.privacy-link {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.privacy-link:hover {
+  opacity: 0.8;
+}
+
 /* Responsive adjustments for Login Screen */
 @media (max-width: 960px) {
   .login-container {
