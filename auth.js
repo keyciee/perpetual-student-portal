@@ -345,47 +345,46 @@ function hydratePortalUI() {
   const inputEmail = document.getElementById('input-email');
   if (inputEmail) inputEmail.value = session.email;
 
-  // 6. Logout Buttons
-  document.querySelectorAll('#logout-btn, .btn-sidebar-logout').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (confirm('Are you sure you want to sign out of the Perpetual Student Portal?')) {
-        clearPortalSession();
-        window.location.href = 'login.html?logout=true';
-      }
-    });
+  // 6. Student Logout Buttons
+  document.querySelectorAll('#logout-btn').forEach(btn => {
+    btn.onclick = (e) => handlePortalLogout(e, false);
   });
 }
+
+// Universal Sign Out handler
+function handlePortalLogout(e, isAdmin = false) {
+  if (e && typeof e.preventDefault === 'function') {
+    e.preventDefault();
+  }
+  clearPortalSession();
+  window.location.href = 'login.html?logout=true';
+}
+window.handlePortalLogout = handlePortalLogout;
 
 // Hydrate Admin UI elements across admin pages
 function hydrateAdminUI() {
   const session = getPortalSession();
-  if (!session || session.role !== 'admin') return;
-
-  document.querySelectorAll('.admin-profile-name, #admin-profile-name').forEach(el => {
-    el.textContent = session.fullName;
-  });
-
-  document.querySelectorAll('.admin-profile-title, #admin-profile-title').forEach(el => {
-    el.textContent = session.designation || "University Administrator";
-  });
-
-  document.querySelectorAll('.admin-profile-dept, #admin-profile-dept').forEach(el => {
-    el.textContent = session.department || "Office of Academic & Financial Administration";
-  });
-
-  document.querySelectorAll('.admin-profile-initials, #admin-profile-initials').forEach(el => {
-    el.textContent = session.initials || "RS";
-  });
-
-  document.querySelectorAll('#admin-logout-btn, .btn-admin-logout').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (confirm('Sign out of University Administration Console?')) {
-        clearPortalSession();
-        window.location.href = 'login.html?logout=true';
-      }
+  if (session && session.role === 'admin') {
+    document.querySelectorAll('.admin-profile-name, #admin-profile-name').forEach(el => {
+      el.textContent = session.fullName;
     });
+
+    document.querySelectorAll('.admin-profile-title, #admin-profile-title').forEach(el => {
+      el.textContent = session.designation || "University Administrator";
+    });
+
+    document.querySelectorAll('.admin-profile-dept, #admin-profile-dept').forEach(el => {
+      el.textContent = session.department || "Office of Academic & Financial Administration";
+    });
+
+    document.querySelectorAll('.admin-profile-initials, #admin-profile-initials').forEach(el => {
+      el.textContent = session.initials || "RS";
+    });
+  }
+
+  // Always attach admin logout listener regardless of session status
+  document.querySelectorAll('#admin-logout-btn, .btn-admin-logout').forEach(btn => {
+    btn.onclick = (e) => handlePortalLogout(e, true);
   });
 }
 
