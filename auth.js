@@ -94,13 +94,13 @@ const DEMO_STUDENT_PROFILES = {
 const DEMO_ADMIN_PROFILES = {
   "EMP-2026-001": {
     adminId: "EMP-2026-001",
-    fullName: "Dr. Arcadio L. Tamayo",
-    firstName: "Arcadio",
+    fullName: "Dr. Roberto M. Santos",
+    firstName: "Roberto",
     email: "admin@perpetual.edu.ph",
     role: "admin",
     department: "Executive Office & Office of the Registrar",
     designation: "University System Administrator & Academic Registrar",
-    initials: "AT"
+    initials: "RS"
   },
   "EMP-2026-CASH": {
     adminId: "EMP-2026-CASH",
@@ -375,7 +375,7 @@ function hydrateAdminUI() {
   });
 
   document.querySelectorAll('.admin-profile-initials, #admin-profile-initials').forEach(el => {
-    el.textContent = session.initials || "AT";
+    el.textContent = session.initials || "RS";
   });
 
   document.querySelectorAll('#admin-logout-btn, .btn-admin-logout').forEach(btn => {
