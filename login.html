@@ -49,12 +49,12 @@
       <div class="login-card-box">
 
         <!-- Portal Role Selector Tabs -->
-        <div class="login-role-tabs" style="display: flex; gap: 8px; margin-bottom: 22px; background: #F1F5F9; padding: 4px; border-radius: var(--radius-md);">
-          <button type="button" class="login-role-tab active" id="tab-role-student" style="flex: 1; padding: 9px 12px; font-size: 13px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; background: #FFFFFF; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+        <div class="login-role-tabs">
+          <button type="button" class="login-role-tab active" id="tab-role-student">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
             Student Portal
           </button>
-          <button type="button" class="login-role-tab" id="tab-role-admin" style="flex: 1; padding: 9px 12px; font-size: 13px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; background: transparent; color: var(--text-medium);">
+          <button type="button" class="login-role-tab" id="tab-role-admin">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             Admin & Staff
           </button>
@@ -66,15 +66,15 @@
         </p>
 
         <!-- Quick Demo Account Chips -->
-        <div class="demo-chips-container" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px;">
-          <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;">Quick Demo Accounts:</div>
-          <div id="demo-student-chips" style="display: flex; flex-wrap: wrap; gap: 6px;">
-            <button type="button" class="demo-chip-btn" data-id="2023-01492" data-pass="perpetual2026" style="padding: 4px 10px; font-size: 11px; background: #FFF5F7; border: 1px solid #FFE4E8; border-radius: 14px; color: var(--primary); font-weight: 600; cursor: pointer;">Juan Dela Cruz (Student)</button>
-            <button type="button" class="demo-chip-btn" data-id="2023-01104" data-pass="perpetual2026" style="padding: 4px 10px; font-size: 11px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; color: var(--text-medium); font-weight: 500; cursor: pointer;">Gabriel Dela Cruz</button>
+        <div class="demo-chips-container">
+          <div class="demo-chips-title">Quick Demo Accounts:</div>
+          <div id="demo-student-chips" class="demo-chips-row">
+            <button type="button" class="demo-chip-btn primary" data-id="2023-01492" data-pass="perpetual2026">Juan Dela Cruz (Student)</button>
+            <button type="button" class="demo-chip-btn" data-id="2023-01104" data-pass="perpetual2026">Gabriel Dela Cruz</button>
           </div>
-          <div id="demo-admin-chips" style="display: none; flex-wrap: wrap; gap: 6px;">
-            <button type="button" class="demo-chip-btn" data-id="EMP-2026-001" data-pass="admin2026" style="padding: 4px 10px; font-size: 11px; background: #FFF5F7; border: 1px solid #FFE4E8; border-radius: 14px; color: var(--primary); font-weight: 600; cursor: pointer;">Dr. Tamayo (Registrar / Records)</button>
-            <button type="button" class="demo-chip-btn" data-id="EMP-2026-CASH" data-pass="admin2026" style="padding: 4px 10px; font-size: 11px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; color: var(--text-medium); font-weight: 500; cursor: pointer;">Ma. Teresa Reyes (Cashier / Treasury)</button>
+          <div id="demo-admin-chips" class="demo-chips-row" style="display: none;">
+            <button type="button" class="demo-chip-btn primary" data-id="EMP-2026-001" data-pass="admin2026">Dr. Tamayo (Registrar)</button>
+            <button type="button" class="demo-chip-btn" data-id="EMP-2026-CASH" data-pass="admin2026">Ma. Teresa Reyes (Cashier)</button>
           </div>
         </div>
 
@@ -130,7 +130,7 @@
           <div class="login-options-row">
             <label class="remember-checkbox-label">
               <input type="checkbox" id="remember-student">
-              <span>Remember Student ID</span>
+              <span id="remember-label">Remember Student ID</span>
             </label>
             <a href="javascript:void(0)" class="forgot-link" id="btn-open-help">Forgot Password / Help</a>
           </div>
@@ -257,43 +257,38 @@
       const inputLabel = document.getElementById('login-identifier-label');
       const studentChips = document.getElementById('demo-student-chips');
       const adminChips = document.getElementById('demo-admin-chips');
+      const rememberLabel = document.getElementById('remember-label');
 
       function setRole(role) {
         currentRole = role;
         hideAlert();
         if (role === 'admin') {
-          tabAdmin.style.background = '#FFFFFF';
-          tabAdmin.style.color = 'var(--primary)';
-          tabAdmin.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
-          tabStudent.style.background = 'transparent';
-          tabStudent.style.color = 'var(--text-medium)';
-          tabStudent.style.boxShadow = 'none';
+          tabAdmin.classList.add('active');
+          tabStudent.classList.remove('active');
 
           loginTitle.textContent = 'Administrative Console Login';
-          loginSubtext.textContent = 'Sign in with your University Employee ID or authorized staff credentials (Registrar, Treasury, Executive Administration).';
+          loginSubtext.textContent = 'Sign in with your University Employee ID or authorized staff credentials to access official records and cashier terminals.';
           inputLabel.textContent = 'Employee ID / Staff Institutional Email';
           inputId.placeholder = 'e.g. EMP-2026-001 or admin@perpetual.edu.ph';
           submitText.textContent = 'Sign In to Administration Console →';
+          if (rememberLabel) rememberLabel.textContent = 'Remember Employee ID';
 
           studentChips.style.display = 'none';
-          adminChips.style.display = 'flex';
+          adminChips.style.display = 'grid';
           inputId.value = '';
           inputPassword.value = '';
         } else {
-          tabStudent.style.background = '#FFFFFF';
-          tabStudent.style.color = 'var(--primary)';
-          tabStudent.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
-          tabAdmin.style.background = 'transparent';
-          tabAdmin.style.color = 'var(--text-medium)';
-          tabAdmin.style.boxShadow = 'none';
+          tabStudent.classList.add('active');
+          tabAdmin.classList.remove('active');
 
           loginTitle.textContent = 'Student Portal Login';
           loginSubtext.textContent = 'Sign in with your Student ID or institutional email to access your personal academic records and financial balance.';
           inputLabel.textContent = 'Student ID / Institutional Email';
           inputId.placeholder = 'e.g. 2023-01492 or student@perpetual.edu.ph';
           submitText.textContent = 'Sign In to Student Portal →';
+          if (rememberLabel) rememberLabel.textContent = 'Remember Student ID';
 
-          studentChips.style.display = 'flex';
+          studentChips.style.display = 'grid';
           adminChips.style.display = 'none';
           inputId.value = '';
           inputPassword.value = '';
