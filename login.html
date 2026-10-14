@@ -65,19 +65,6 @@
           Sign in with your Student ID or institutional email to access your personal academic records and financial balance.
         </p>
 
-        <!-- Quick Demo Account Chips -->
-        <div class="demo-chips-container">
-          <div class="demo-chips-title">Quick Demo Accounts:</div>
-          <div id="demo-student-chips" class="demo-chips-row">
-            <button type="button" class="demo-chip-btn primary" data-id="2023-01492" data-pass="perpetual2026">Juan Dela Cruz (Student)</button>
-            <button type="button" class="demo-chip-btn" data-id="2023-01104" data-pass="perpetual2026">Gabriel Dela Cruz</button>
-          </div>
-          <div id="demo-admin-chips" class="demo-chips-row" style="display: none;">
-            <button type="button" class="demo-chip-btn primary" data-id="EMP-2026-001" data-pass="admin2026">Dr. Tamayo (Registrar)</button>
-            <button type="button" class="demo-chip-btn" data-id="EMP-2026-CASH" data-pass="admin2026">Ma. Teresa Reyes (Cashier)</button>
-          </div>
-        </div>
-
         <!-- Status / Alert Message Box -->
         <div class="login-alert" id="login-alert">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
@@ -255,8 +242,6 @@
       const loginTitle = document.getElementById('login-title');
       const loginSubtext = document.getElementById('login-subtext');
       const inputLabel = document.getElementById('login-identifier-label');
-      const studentChips = document.getElementById('demo-student-chips');
-      const adminChips = document.getElementById('demo-admin-chips');
       const rememberLabel = document.getElementById('remember-label');
 
       function setRole(role) {
@@ -273,8 +258,6 @@
           submitText.textContent = 'Sign In to Administration Console →';
           if (rememberLabel) rememberLabel.textContent = 'Remember Employee ID';
 
-          studentChips.style.display = 'none';
-          adminChips.style.display = 'grid';
           inputId.value = '';
           inputPassword.value = '';
         } else {
@@ -288,8 +271,6 @@
           submitText.textContent = 'Sign In to Student Portal →';
           if (rememberLabel) rememberLabel.textContent = 'Remember Student ID';
 
-          studentChips.style.display = 'grid';
-          adminChips.style.display = 'none';
           inputId.value = '';
           inputPassword.value = '';
         }
@@ -297,15 +278,6 @@
 
       tabStudent.addEventListener('click', () => setRole('student'));
       tabAdmin.addEventListener('click', () => setRole('admin'));
-
-      // Demo Chip Click handlers
-      document.querySelectorAll('.demo-chip-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          inputId.value = btn.getAttribute('data-id');
-          inputPassword.value = btn.getAttribute('data-pass');
-          hideAlert();
-        });
-      });
 
       // 1. Check for stored saved ID
       const savedId = localStorage.getItem('perpetual_saved_student_id');

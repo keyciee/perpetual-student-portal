@@ -1155,63 +1155,6 @@ body {
   min-height: 40px;
 }
 
-/* Quick Demo Account Chips Grid */
-.demo-chips-container {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-height: 56px;
-}
-
-.demo-chips-title {
-  font-size: 11px;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.5px;
-}
-
-.demo-chips-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  min-height: 32px;
-}
-
-.demo-chip-btn {
-  height: 32px;
-  padding: 0 8px;
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border: 1px solid var(--border-color);
-  background: #F8FAFC;
-  color: var(--text-medium);
-  transition: all 0.15s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.demo-chip-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: #FFF5F7;
-}
-
-.demo-chip-btn.primary {
-  background: #FFF5F7;
-  border-color: #FFE4E8;
-  color: var(--primary);
-}
 
 /* Alert Banner */
 .login-alert {
